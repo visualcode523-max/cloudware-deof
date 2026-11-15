@@ -1,0 +1,4904 @@
+-- This file was Deobfuscated & Cleaned using SigmaBot V5 | .gg/Zame2JAGDr
+--[[
+   SSSSSSSSSSSSSSS BBBBBBBBBBBBBBBBB   555555555555555555
+  SS:::::::::::::::SB::::::::::::::::B  5::::::::::::::::5
+ S:::::SSSSSS::::::SB::::::BBBBBB:::::B 5::::::::::::::::5
+ S:::::S     SSSSSSSBB:::::B     B:::::B5:::::555555555555
+ S:::::S              B::::B     B:::::B5:::::5
+ S:::::S              B::::B     B:::::B5:::::5
+  S::::SSSS           B::::BBBBBB:::::B 5:::::5555555555
+   SS::::::SSSSS      B:::::::::::::BB  5:::::::::::::::5
+     SSS::::::::SS    B::::BBBBBB:::::B 555555555555:::::5
+        SSSSSS::::S   B::::B     B:::::B            5:::::5
+             S:::::S  B::::B     B:::::B            5:::::5
+             S:::::S  B::::B     B:::::B5555555     5:::::5
+ SSSSSSS     S:::::SBB:::::BBBBBB::::::B5::::::55555::::::5
+ S::::::SSSSSS:::::SB:::::::::::::::::B  55:::::::::::::55
+ S:::::::::::::::SS B::::::::::::::::B     55:::::::::55
+  SSSSSSSSSSSSSSS   BBBBBBBBBBBBBBBBB        555555555
+]]
+
+local players, runService, userInputService, tweenService, workspaceService, coreGui, guiService, virtualInputManager, lighting, localPlayer, currentCamera, getMouse, touchEnabled, v1, v2, v6, v9, highlight, v10, f7, circle, v33, v34, x4, y, v80, v81, v82, v83, v84, v85, textSize, v86, cloudWareV42, mainFrame, frame2, instance4, f35, instance6, instance7, v98, position3, position4, v99, f36, instance11, instance12, instance13, v101, v102, position5, v103, v104, rightControl, frame3, count2, combat2, scroll9, instance105, instance106, scroll10, scroll11, scroll13, instance125, instance126, v177, instance131, v178, instance133, instance134, f60, instance136, instance143, instance146, instance147, instance157, instance162, instance167
+
+players = game:GetService("Players")
+
+runService = game:GetService("RunService")
+userInputService = game:GetService("UserInputService")
+tweenService = game:GetService("TweenService")
+workspaceService = game:GetService("Workspace")
+coreGui = game:GetService("CoreGui")
+guiService = game:GetService("GuiService")
+virtualInputManager = game:GetService("VirtualInputManager")
+lighting = game:GetService("Lighting")
+localPlayer = players.LocalPlayer
+currentCamera = workspaceService.CurrentCamera
+getMouse = localPlayer:GetMouse()
+touchEnabled = userInputService.TouchEnabled and not userInputService.KeyboardEnabled
+
+v1 = {
+AimActive = false, AimMode = "Camera", AimHoldMode = true, AimToggleState = false, AimSmoothness = 3, AimFOVEnabled = false, AimFOVSize = 100, AimWallCheck = false, HitboxEnabled = false, HitboxSize = 3, HitboxTransparency = 0.5, BoxesEnabled = false, TracersEnabled = false, HeadESPEnabled = false, NamesEnabled = false, HealthEnabled = false, InvEnabled = false, SkeletonEnabled = false, HighlightEnabled = false, HighlightFillTrans = 0.5, HighlightColor = Color3.fromRGB(255, 50, 50), HighlightOutline = Color3.fromRGB(255, 255, 255), ToolHighlightEnabled = false, ToolHighlightColor = Color3.fromRGB(255, 200, 0), SelfHighlightEnabled = false, SelfHighlightColor = Color3.fromRGB(0, 200, 255), SelfHighlightOutline = Color3.fromRGB(255, 255, 255), ESPVisible = true, SpeedhackEnabled = false, JumpEnabled = false, InstantInteractEnabled = false, MarshFarmActive = false, DeleteActive = false, StretchEnabled = false, StretchScale = 70, ShowSnowParticles = true, }
+
+_G.AimbotKey = Enum.KeyCode.E
+_G.HitboxKey = nil
+_G.ESPKey = nil
+
+v2 = {}
+
+local function f1(value)
+    return v2[value.Name] == true
+end
+
+do
+    local v3 = getgenv()
+    v3.StretchConn = getgenv().StretchConn or nil
+end
+
+local function f2()
+    return 1 - v1.StretchScale / 100 * 0.45
+end
+
+local function f3(p1)
+    if getgenv().StretchConn then
+        getgenv().StretchConn:Disconnect()
+        getgenv().StretchConn = nil
+    end
+
+local v4
+
+if not p1 then
+    return
+else
+    v4 = f2()
+
+    local v5 = getgenv()
+
+    v5.StretchConn = runService.RenderStepped:Connect(function()
+        if currentCamera then
+            currentCamera.CFrame = currentCamera.CFrame
+            * CFrame.new(0, 0, 0, 1, 0, 0, 0, v4, 0, 0, 0, 1)
+        end
+end)
+
+return
+end
+end
+
+v6 = {}
+local v7 = {}
+local v8 = {}
+v9 = {}
+highlight = nil
+
+local function makeHighlight()
+    if v1.SelfHighlightEnabled then
+        if not highlight then
+            highlight = Instance.new("Highlight")
+            highlight.Parent = coreGui
+        end
+
+    highlight.Adornee = localPlayer.Character
+    highlight.FillColor = v1.SelfHighlightColor
+    highlight.OutlineColor = v1.SelfHighlightOutline
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+elseif highlight then
+    pcall(function() highlight:Destroy() end)
+    highlight = nil
+end
+end
+
+v10 = {}
+
+local function f4(key)
+    if v9[key] then
+        pcall(function() v9[key]:Destroy() end)
+        v9[key] = nil
+    end
+
+if v10[key] then
+    pcall(function() v10[key]:Destroy() end)
+    v10[key] = nil
+end
+end
+
+local function f5(p2)
+    local character = p2 and p2.Character
+
+    if not character then
+        return false
+    else
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        return humanoid and humanoid.Health > 0
+    end
+end
+
+local function f6(character2)
+    if not character2 then
+        return nil
+    end
+
+for index, value2 in ipairs(character2:GetChildren()) do
+    if value2:IsA("Tool") then
+        return value2
+    end
+end
+
+return nil
+end
+
+local function f8()
+    if not v1.ESPVisible or not v1.HighlightEnabled and not v1.ToolHighlightEnabled then
+        for key2 in pairs(v9) do
+            local v11 = key2
+            pcall(function() v9[v11]:Destroy() end)
+            v9[v11] = nil
+        end
+
+    for key3 in pairs(v10) do
+        local v12 = key3
+        pcall(function() v10[v12]:Destroy() end)
+        v10[v12] = nil
+    end
+
+return
+end
+
+for index2, value3 in ipairs(players:GetPlayers()) do
+    if value3 ~= localPlayer then
+        if f1(value3) then
+            f4(value3)
+        elseif f5(value3) then
+            f7(value3)
+        else
+            f4(value3)
+        end
+end
+end
+end
+
+function f7(key4)
+    if key4 == localPlayer then
+        return
+    elseif not f5(key4) then
+        f4(key4)
+        return
+    else
+        local character3 = key4.Character
+
+        if v1.HighlightEnabled then
+            if not v9[key4] then
+                local highlight2 = Instance.new("Highlight")
+                highlight2.FillColor = v1.HighlightColor
+                highlight2.OutlineColor = v1.HighlightOutline
+                highlight2.FillTransparency = v1.HighlightFillTrans
+                highlight2.OutlineTransparency = 0
+                highlight2.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight2.Adornee = character3
+                highlight2.Parent = coreGui
+
+                v9[key4] = highlight2
+            else
+                local v13 = v9[key4]
+                v13.FillColor = v1.HighlightColor
+                v13.OutlineColor = v1.HighlightOutline
+                v13.FillTransparency = v1.HighlightFillTrans
+            end
+    elseif v9[key4] then
+        pcall(function() v9[key4]:Destroy() end)
+        v9[key4] = nil
+    end
+
+if v1.ToolHighlightEnabled then
+    local v14 = f6(character3)
+
+    if v14 then
+        if not v10[key4] then
+            local highlight3 = Instance.new("Highlight")
+            highlight3.FillColor = v1.ToolHighlightColor
+            highlight3.OutlineColor = v1.ToolHighlightColor
+            highlight3.FillTransparency = 0.3
+            highlight3.OutlineTransparency = 0
+            highlight3.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            highlight3.Adornee = v14
+            highlight3.Parent = coreGui
+
+            v10[key4] = highlight3
+        else
+            v10[key4].FillColor = v1.ToolHighlightColor
+            v10[key4].OutlineColor = v1.ToolHighlightColor
+            v10[key4].Adornee = v14
+        end
+elseif v10[key4] then
+    pcall(function() v10[key4]:Destroy() end)
+    v10[key4] = nil
+end
+elseif v10[key4] then
+    pcall(function() v10[key4]:Destroy() end)
+    v10[key4] = nil
+end
+
+return
+end
+end
+
+circle = Drawing.new("Circle")
+circle.Color = Color3.fromRGB(255, 255, 255)
+circle.Thickness = 1
+circle.NumSides = 100
+circle.Visible = false
+circle.Filled = not touchEnabled
+circle.Transparency = touchEnabled and 1 or 0.88
+
+local function f9(key5)
+    if not v6[key5] then
+        return
+    end
+
+for key6, value4 in pairs(v6[key5]) do
+    local v15 = value4
+
+    if typeof(v15) == "table" then
+        for index3, value5 in ipairs(v15) do
+            local v16 = value5
+
+            pcall(function()
+                if v16 and v16.Remove then
+                    v16:Remove()
+                end
+        end)
+end
+else
+    pcall(function()
+        if v15 and v15.Remove then
+            v15:Remove()
+        end
+end)
+end
+end
+
+v6[key5] = nil
+end
+
+local function f10(position)
+    if not v1.AimWallCheck then
+        return true
+    else
+        local position2 = currentCamera.CFrame.Position
+        local v17 = position - position2
+        local ray = Ray.new(position2, v17.Unit * v17.Magnitude)
+        local v18 = { localPlayer.Character }
+
+        for index4, value6 in ipairs(players:GetPlayers()) do
+            if value6.Character then
+                table.insert(v18, value6.Character)
+            end
+    end
+
+return workspaceService:FindPartOnRayWithIgnoreList(ray, v18) == nil
+end
+end
+
+local function f11(character4)
+    if not character4 then
+        return
+    else
+        local humanoid2 = character4:FindFirstChildOfClass("Humanoid")
+
+        if humanoid2 and humanoid2.Health <= 0 then
+            return
+        else
+            local upperTorso = character4:FindFirstChild("UpperTorso")
+
+            if not upperTorso then
+                return
+            end
+
+        if not v7[upperTorso] then
+            v7[upperTorso] = upperTorso.Size
+        end
+
+    if not v8[upperTorso] then
+        v8[upperTorso] = upperTorso.Transparency
+    end
+
+upperTorso.Size = Vector3.new(v1.HitboxSize, v1.HitboxSize, v1.HitboxSize)
+upperTorso.Transparency = v1.HitboxTransparency
+upperTorso.CanCollide = false
+upperTorso.Massless = true
+
+return
+end
+end
+end
+
+local function f12(value7)
+    local v19, v20 = pcall(function()
+        local v21 = {}
+        local v22 = {}
+        local backpack = value7:FindFirstChild("Backpack")
+        local character5 = value7.Character
+
+        if backpack then
+            for index5, value8 in ipairs(backpack:GetChildren()) do
+                if value8:IsA("Tool") then
+                    local name = value8.Name
+
+                    if not v22[name] then
+                        v22[name] = { bp = 0, eq = 0 }
+                        table.insert(v21, name)
+                    end
+
+                local v23 = v22[name]
+                v23.bp = v23.bp + 1
+            end
+    end
+end
+
+if character5 then
+    for index6, value9 in ipairs(character5:GetChildren()) do
+        if value9:IsA("Tool") then
+            local name2 = value9.Name
+
+            if not v22[name2] then
+                v22[name2] = { bp = 0, eq = 0 }
+                table.insert(v21, name2)
+            end
+
+        local v24 = v22[name2]
+        v24.eq = v24.eq + 1
+    end
+end
+end
+
+if #v21 == 0 then
+    return "Empty"
+else
+    local v25 = {}
+
+    for index7, value10 in ipairs(v21) do
+        local v26 = v22[value10]
+        local v27 = v26.bp + v26.eq
+
+        if v26.eq > 0 then
+            table.insert(v25, value10 .. (v27 > 1 and " (Eq " .. v27 .. ")" or " (Eq)"))
+        else
+            table.insert(v25, value10 .. (v27 > 1 and " (" .. v27 .. ")" or ""))
+        end
+end
+
+return table.concat(v25, "\n")
+end
+end)
+
+return v19 and v20 or "Empty"
+end
+
+local function f13(character6)
+    if not character6 then
+        return
+    else
+        local upperTorso2 = character6:FindFirstChild("UpperTorso")
+
+        if upperTorso2 and v7[upperTorso2] then
+            upperTorso2.Size = v7[upperTorso2]
+            v7[upperTorso2] = nil
+            upperTorso2.Transparency = v8[upperTorso2] or 0
+            v8[upperTorso2] = nil
+            upperTorso2.CanCollide = true
+        end
+
+    return
+end
+end
+
+local function f14()
+    for index8, value11 in ipairs(players:GetPlayers()) do
+        if value11 ~= localPlayer and value11.Character and not f1(value11) then
+            local humanoid3 = value11.Character:FindFirstChildOfClass("Humanoid")
+
+            if humanoid3 and humanoid3.Health > 0 then
+                f11(value11.Character)
+            end
+    end
+end
+end
+
+local function f15()
+    for index9, value12 in ipairs(players:GetPlayers()) do
+        if value12 ~= localPlayer and value12.Character then
+            f13(value12.Character)
+        end
+end
+end
+
+do
+    local function f16(value13)
+        if value13 == localPlayer then
+            return
+        end
+
+    local f17
+
+    function f17(p3)
+        task.wait(1)
+        local humanoid4 = p3:FindFirstChildOfClass("Humanoid")
+
+        if humanoid4 then
+            if v1.HitboxEnabled and not f1(value13) and humanoid4.Health > 0 then
+                f11(p3)
+            end
+
+        humanoid4.Died:Connect(function()
+            f13(p3)
+            f9(value13)
+            f4(value13)
+        end)
+end
+end
+
+if value13.Character then
+    task.spawn(f17, value13.Character)
+end
+
+value13.CharacterAdded:Connect(function(character7)
+    task.spawn(f17, character7)
+    task.wait(0.5)
+
+    if v1.HighlightEnabled or v1.ToolHighlightEnabled then
+        f4(value13)
+        f7(value13)
+    end
+end)
+end
+
+for index10, value14 in ipairs(players:GetPlayers()) do
+    f16(value14)
+end
+
+players.PlayerAdded:Connect(f16)
+
+players.PlayerRemoving:Connect(function(player)
+    f9(player)
+    f4(player)
+    v2[player.Name] = nil
+end)
+
+for index11, value15 in ipairs(players:GetPlayers()) do
+    local v28 = value15
+
+    if v28 ~= localPlayer then
+        v28.CharacterRemoving:Connect(function()
+            f9(v28)
+            f4(v28)
+        end)
+end
+end
+
+players.PlayerAdded:Connect(function(player2)
+    if player2 ~= localPlayer then
+        player2.CharacterRemoving:Connect(function()
+            f9(player2)
+            f4(player2)
+        end)
+end
+end)
+end
+
+local v29 = {}
+
+local function f18(key7)
+    if not key7:IsA("ProximityPrompt") then
+        return
+    end
+
+if not v29[key7] then
+    v29[key7] = {
+    HoldDuration = key7.HoldDuration, RequiresLineOfSight = key7.RequiresLineOfSight, MaxActivationDistance = key7.MaxActivationDistance, }
+end
+
+key7.HoldDuration = 0
+key7.RequiresLineOfSight = false
+key7.MaxActivationDistance = 50
+end
+
+local function f19(value16)
+    if not value16:IsA("ProximityPrompt") then
+        return
+    end
+
+if v29[value16] then
+    value16.HoldDuration = v29[value16].HoldDuration
+    value16.RequiresLineOfSight = v29[value16].RequiresLineOfSight
+    value16.MaxActivationDistance = v29[value16].MaxActivationDistance
+
+    v29[value16] = nil
+end
+end
+
+local function f20()
+    for index12, value17 in ipairs(workspaceService:GetDescendants()) do
+        if value17:IsA("ProximityPrompt") then
+            f18(value17)
+        end
+end
+end
+
+local function f21()
+    for index13, value18 in ipairs(workspaceService:GetDescendants()) do
+        if value18:IsA("ProximityPrompt") then
+            f19(value18)
+        end
+end
+
+v29 = {}
+end
+
+do
+    workspaceService.DescendantAdded:Connect(function(descendant)
+        if descendant:IsA("ProximityPrompt") and v1.InstantInteractEnabled then
+            task.wait(0.1)
+            f18(descendant)
+        end
+end)
+
+local v30 = pcall(function() return virtualInputManager end) and virtualInputManager or nil
+
+local function f22(p4, p5)
+    if not v1.MarshFarmActive then
+        return
+    else
+        local character8 = localPlayer.Character
+        local humanoid5 = character8 and character8:FindFirstChildOfClass("Humanoid")
+
+        if not humanoid5 then
+            return
+        else
+            local findFirstChild = localPlayer.Backpack:FindFirstChild(p4)
+            or character8:FindFirstChild(p4)
+
+            if findFirstChild then
+                humanoid5:EquipTool(findFirstChild)
+                task.wait(0.3)
+
+                if v30 then
+                    v30:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+                    task.wait(p5)
+                    v30:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+                else
+                    local humanoidRootPart = character8:FindFirstChild("HumanoidRootPart")
+
+                    if humanoidRootPart then
+                        for index14, value19 in ipairs(workspaceService:GetDescendants()) do
+                            local v31 = value19
+
+                            if v31:IsA("ProximityPrompt")
+                            and (v31.Parent.Position - humanoidRootPart.Position).Magnitude < 15 then
+                            pcall(function() fireproximityprompt(v31) end)
+                        end
+                end
+        end
+
+    task.wait(p5)
+end
+end
+
+return
+end
+end
+end
+
+task.spawn(function()
+    while true do
+        if v1.MarshFarmActive then
+            f22("Water", 1)
+            task.wait(21.5)
+            f22("Sugar Block Bag", 1)
+            task.wait(1.5)
+            f22("Gelatin", 1)
+            task.wait(46.5)
+            f22("Empty Bag", 1)
+            task.wait(1)
+        else
+            task.wait(1)
+        end
+end
+end)
+end
+
+local v32 = {
+{ "Head", "UpperTorso" }, { "UpperTorso", "LowerTorso" }, { "UpperTorso", "LeftUpperArm" }, { "LeftUpperArm", "LeftLowerArm" }, { "LeftLowerArm", "LeftHand" }, { "UpperTorso", "RightUpperArm" }, { "RightUpperArm", "RightLowerArm" }, { "RightLowerArm", "RightHand" }, { "LowerTorso", "LeftUpperLeg" }, { "LeftUpperLeg", "LeftLowerLeg" }, { "LeftLowerLeg", "LeftFoot" }, { "LowerTorso", "RightUpperLeg" }, { "RightUpperLeg", "RightLowerLeg" }, { "RightLowerLeg", "RightFoot" }, }
+
+v33 = false
+v34 = {}
+
+local function f23(p6, aimSmoothness)
+    if not p6 then
+        return
+    end
+
+currentCamera.CFrame = currentCamera.CFrame:Lerp(CFrame.new(
+currentCamera.CFrame.Position, p6.Position
+), math.clamp(aimSmoothness / 10, 0.05, 0.55))
+end
+
+local cloudWareDeleteHighlight = Instance.new("SelectionBox")
+cloudWareDeleteHighlight.Name = "CloudWare_DeleteHighlight"
+cloudWareDeleteHighlight.Parent = coreGui
+cloudWareDeleteHighlight.Color3 = Color3.fromRGB(255, 0, 0)
+
+local function f24()
+    v1.AimActive = false
+    v1.AimFOVEnabled = false
+    v1.HitboxEnabled = false
+    v1.BoxesEnabled = false
+    v1.TracersEnabled = false
+    v1.HeadESPEnabled = false
+    v1.NamesEnabled = false
+    v1.HealthEnabled = false
+    v1.InvEnabled = false
+    v1.SkeletonEnabled = false
+    v1.ESPVisible = false
+    v1.HighlightEnabled = false
+    v1.ToolHighlightEnabled = false
+    v1.SelfHighlightEnabled = false
+    v1.SpeedhackEnabled = false
+    v1.DeleteActive = false
+    v1.StretchEnabled = false
+    v1.InstantInteractEnabled = false
+    v1.MarshFarmActive = false
+    v1.JumpEnabled = false
+
+    v33 = false
+    v1.AimToggleState = false
+
+    pcall(function()
+        local character9 = localPlayer.Character
+        local humanoid6 = character9 and character9:FindFirstChildOfClass("Humanoid")
+
+        if humanoid6 then
+            humanoid6.WalkSpeed = 16
+        end
+end)
+
+pcall(function() cloudWareDeleteHighlight.Adornee = nil end)
+
+f15()
+f3(false)
+f21()
+
+for key8 in pairs(v6) do
+    f9(key8)
+end
+
+v6 = {}
+
+for key9 in pairs(v9) do
+    f4(key9)
+end
+
+if highlight then
+    pcall(function() highlight:Destroy() end)
+    highlight = nil
+end
+
+pcall(function()
+    circle.Visible = false
+    circle:Remove()
+end)
+
+pcall(function() cloudWareDeleteHighlight:Destroy() end)
+
+pcall(function()
+    local cloudWareV4 = coreGui:FindFirstChild("CloudWare_v4")
+
+    if cloudWareV4 then
+        cloudWareV4:Destroy()
+    end
+end)
+end
+
+cloudWareDeleteHighlight.LineThickness = 0.05
+
+local function f25(p7)
+    for key10, value20 in pairs(p7) do
+        if v1[key10] ~= nil then
+            v1[key10] = value20
+        end
+end
+
+if p7.AimbotKey and p7.AimbotKey ~= "nil" then
+    pcall(function() _G.AimbotKey = Enum.KeyCode[p7.AimbotKey] end)
+end
+
+if p7.HitboxKey and p7.HitboxKey ~= "nil" then
+    pcall(function() _G.HitboxKey = Enum.KeyCode[p7.HitboxKey] end)
+end
+
+if p7.ESPKey and p7.ESPKey ~= "nil" then
+    pcall(function() _G.ESPKey = Enum.KeyCode[p7.ESPKey] end)
+end
+end
+
+local function f26(target)
+    for index15, value21 in ipairs(players:GetPlayers()) do
+        if value21.Character and target:IsDescendantOf(value21.Character) then
+            return true
+        end
+end
+
+return false
+end
+
+local function f27(p8)
+    local v35 = {}
+
+    for key11, value22 in pairs(p8) do
+        local v36 = type(value22) == "boolean" and (value22 and "1" or "0")
+        or type(value22) == "number" and tostring(value22)
+        or type(value22) == "string" and value22 or "nil"
+
+        table.insert(v35, key11 .. "=" .. v36)
+    end
+
+return table.concat(v35, ";")
+end
+
+local function f28(index16)
+    return 0.06 + (1 - (index16 - 1) / 4) * 0.44
+end
+
+local function f29(p9)
+    local v37 = {}
+
+    for match in p9:gmatch("[^;]+") do
+        local v38, v39 = match:match("^(.-)=(.+)$")
+
+        if v38 and v39 then
+            if v39 == "1" then
+                v37[v38] = true
+            elseif v39 == "0" then
+                v37[v38] = false
+            elseif v39 == "nil" then
+                v37[v38] = nil
+            elseif tonumber(v39) then
+                v37[v38] = tonumber(v39)
+            else
+                v37[v38] = v39
+            end
+    end
+end
+
+return v37
+end
+
+local function f30()
+    local v40, v41 = pcall(function() return readfile("CloudWare_configs.txt") end)
+
+    if not v40 or not v41 or v41 == "" then
+        return {}
+    else
+        local v42 = {}
+
+        for match2 in v41:gmatch("[^\2]+") do
+            local v43, v44 = match2:match("^(.-)[\1](.+)$")
+
+            if v43 and v44 then
+                v42[v43] = v44
+            end
+    end
+
+return v42
+end
+end
+
+local function f31()
+    local aimActive = v1.AimActive
+    local aimMode = v1.AimMode
+    local aimHoldMode = v1.AimHoldMode
+    local aimSmoothness2 = v1.AimSmoothness
+    local aimFOVEnabled = v1.AimFOVEnabled
+    local aimFOVSize = v1.AimFOVSize
+    local aimWallCheck = v1.AimWallCheck
+    local hitboxEnabled = v1.HitboxEnabled
+    local hitboxSize = v1.HitboxSize
+    local hitboxTransparency = v1.HitboxTransparency
+    local boxesEnabled = v1.BoxesEnabled
+    local namesEnabled = v1.NamesEnabled
+    local healthEnabled = v1.HealthEnabled
+    local invEnabled = v1.InvEnabled
+    local skeletonEnabled = v1.SkeletonEnabled
+    local highlightEnabled = v1.HighlightEnabled
+    local highlightFillTrans = v1.HighlightFillTrans
+    local toolHighlightEnabled = v1.ToolHighlightEnabled
+    local selfHighlightEnabled = v1.SelfHighlightEnabled
+
+    return {
+    AimActive = aimActive, AimMode = aimMode, AimHoldMode = aimHoldMode, AimSmoothness = aimSmoothness2, AimFOVEnabled = aimFOVEnabled, AimFOVSize = aimFOVSize, AimWallCheck = aimWallCheck, HitboxEnabled = hitboxEnabled, HitboxSize = hitboxSize, HitboxTransparency = hitboxTransparency, BoxesEnabled = boxesEnabled, NamesEnabled = namesEnabled, HealthEnabled = healthEnabled, InvEnabled = invEnabled, SkeletonEnabled = skeletonEnabled, HighlightEnabled = highlightEnabled, HighlightFillTrans = highlightFillTrans, ToolHighlightEnabled = toolHighlightEnabled, SelfHighlightEnabled = selfHighlightEnabled, ESPVisible = v1.ESPVisible, SpeedhackEnabled = v1.SpeedhackEnabled, StretchEnabled = v1.StretchEnabled, StretchScale = v1.StretchScale, ShowSnowParticles = v1.ShowSnowParticles, AimbotKey = _G.AimbotKey and _G.AimbotKey.Name or "E", HitboxKey = _G.HitboxKey and _G.HitboxKey.Name or "nil", ESPKey = _G.ESPKey and _G.ESPKey.Name or "nil", }
+end
+
+local function f32(p10)
+    local v45 = {}
+
+    for key12, value23 in pairs(p10) do
+        table.insert(v45, key12 .. "\1" .. value23)
+    end
+
+pcall(function() writefile("CloudWare_configs.txt", table.concat(v45, "\2")) end)
+end
+
+do
+    local function f33(x, p11)
+        local huge = math.huge
+        local v46, v47
+
+        for key13, value24 in pairs(players:GetPlayers()) do
+            if not (value24 == localPlayer or f1(value24) or not value24.Character) then
+                if f5(value24) then
+                    local character10 = value24.Character
+
+                    local head = character10:FindFirstChild("Head")
+                    or character10:FindFirstChild("UpperTorso")
+
+                    if head then
+                        local v48, v49 = currentCamera:WorldToViewportPoint(head.Position)
+
+                        if not (not v49 or v48.Z < 0) then
+                            local magnitude = (Vector2.new(x, p11) - Vector2.new(v48.X, v48.Y)).Magnitude
+
+                            if magnitude < huge and magnitude <= v1.AimFOVSize and f10(head.Position) then
+                                huge = magnitude
+                                v47 = value24
+                                v46 = head
+                            end
+                    end
+            end
+    end
+end
+end
+
+return v47, v46
+end
+
+local function f34(p12, x2, index17, aimSmoothness3)
+    if not p12 then
+        return
+    else
+        local v50, v51 = currentCamera:WorldToViewportPoint(p12.Position)
+
+        if not v51 or v50.Z < 0 then
+            return
+        else
+            local v52 = f28(aimSmoothness3)
+
+            if mousemoverel then
+                mousemoverel((v50.X - x2) * v52, (v50.Y - index17) * v52)
+            else
+                currentCamera.CFrame = currentCamera.CFrame:Lerp(CFrame.new(
+                currentCamera.CFrame.Position, p12.Position
+                ), v52)
+            end
+
+        return
+    end
+end
+end
+
+userInputService.InputBegan:Connect(function(input, p13)
+    if p13 then
+        return
+    end
+
+if input.UserInputType == Enum.UserInputType.MouseButton1
+and userInputService:IsKeyDown(Enum.KeyCode.LeftAlt) and v1.DeleteActive then
+local target2 = getMouse.Target
+
+if target2 and target2:IsA("BasePart") and not f26(target2) then
+    table.insert(v34, { Part = target2, Parent = target2.Parent, CF = target2.CFrame })
+    target2.Parent = nil
+end
+end
+
+if input.KeyCode == Enum.KeyCode.Z and userInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+    if #v34 > 0 then
+        local v53 = table.remove(v34)
+        v53.Part.Parent = v53.Parent
+        v53.Part.CFrame = v53.CF
+    end
+end
+
+if input.UserInputType ~= Enum.UserInputType.Keyboard then
+    return
+end
+
+if _G.HitboxKey and input.KeyCode == _G.HitboxKey then
+    v1.HitboxEnabled = not v1.HitboxEnabled
+
+    if v1.HitboxEnabled then
+        f14()
+    else
+        f15()
+    end
+end
+
+if _G.ESPKey and input.KeyCode == _G.ESPKey then
+    v1.ESPVisible = not v1.ESPVisible
+end
+
+if not v1.AimHoldMode and _G.AimbotKey and input.KeyCode == _G.AimbotKey then
+    v1.AimToggleState = not v1.AimToggleState
+end
+end)
+
+local v54 = 0
+local v55 = 0.04
+local v56 = 0
+
+runService.RenderStepped:Connect(function()
+    local v57 = tick()
+    local viewportSize = currentCamera.ViewportSize
+    local getGuiInset = guiService:GetGuiInset()
+    local x3 = touchEnabled and viewportSize.X / 2 or getMouse.X
+    local v58 = touchEnabled and viewportSize.Y / 2 or getMouse.Y + getGuiInset.Y
+
+    circle.Visible = v1.AimFOVEnabled
+    circle.Radius = v1.AimFOVSize
+
+    circle.Position = v1.AimMode == "Camera"
+    and Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
+    or Vector2.new(x3, v58)
+
+    if v1.SpeedhackEnabled then
+        local character11 = localPlayer.Character
+        local humanoid7 = character11 and character11:FindFirstChildOfClass("Humanoid")
+
+        if humanoid7 and humanoid7.WalkSpeed ~= 23 then
+            humanoid7.WalkSpeed = 23
+        end
+end
+
+if v1.DeleteActive then
+    local target3 = getMouse.Target
+
+    cloudWareDeleteHighlight.Adornee = target3 and target3:IsA("BasePart")
+    and not f26(target3) and target3
+    or nil
+else
+    cloudWareDeleteHighlight.Adornee = nil
+end
+
+local isKeyDown = false
+
+if v1.AimActive then
+    if v1.AimHoldMode then
+        isKeyDown = touchEnabled and v33
+        or not touchEnabled and userInputService:IsKeyDown(_G.AimbotKey or Enum.KeyCode.E)
+    else
+        isKeyDown = touchEnabled and v33 or v1.AimToggleState
+    end
+end
+
+if isKeyDown then
+    if v1.AimMode == "Camera" then
+        local v59, v60 = f33(x3, v58)
+
+        if v60 then
+            f23(v60, v1.AimSmoothness)
+        end
+else
+    local v61, v62 = f33(getMouse.X, v58)
+
+    if v62 then
+        f34(v62, getMouse.X, v58, v1.AimSmoothness)
+    end
+end
+end
+
+if v57 - v56 >= 0.1 then
+    v56 = v57
+    f8()
+    makeHighlight()
+end
+
+if v57 - v54 < v55 then
+    return
+else
+    v54 = v57
+
+    for key14, value25 in pairs(v6) do
+        local v63 = value25
+
+        pcall(function()
+            if v63.Box then
+                v63.Box.Visible = false
+            end
+
+        if v63.HBar then
+            v63.HBar.Visible = false
+        end
+
+    if v63.NameTxt then
+        v63.NameTxt.Visible = false
+    end
+
+if v63.InvTxt then
+    v63.InvTxt.Visible = false
+end
+
+if v63.TracerLine then
+    v63.TracerLine.Visible = false
+end
+
+if v63.HeadCircle then
+    v63.HeadCircle.Visible = false
+end
+
+if v63.SkeletonLines then
+    for index18, value26 in ipairs(v63.SkeletonLines) do
+        value26.Visible = false
+    end
+end
+end)
+end
+
+local v64 = {}
+
+for key15 in pairs(v6) do
+    local v65 = false
+
+    if key15 and key15.Parent == players then
+        if f5(key15) then
+            v65 = true
+        end
+end
+
+if not v65 then
+    table.insert(v64, key15)
+end
+end
+
+for index19, value27 in ipairs(v64) do
+    f9(value27)
+end
+
+if not v1.ESPVisible then
+    v55 = 0.1
+    return
+else
+    local count = 0
+
+    for key16, value28 in pairs(players:GetPlayers()) do
+        if value28 ~= localPlayer then
+            if not f1(value28) then
+                if not f5(value28) then
+                    if v6[value28] then
+                        f9(value28)
+                    end
+            else
+                local character12 = value28.Character
+                local humanoid8 = character12:FindFirstChildOfClass("Humanoid")
+                local humanoidRootPart2 = character12:FindFirstChild("HumanoidRootPart")
+                local v66 = not humanoidRootPart2
+                local head2 = character12:FindFirstChild("Head")
+
+                if not (v66 or not head2 or not character12.Parent) then
+                    if v1.HitboxEnabled and not f1(value28) then
+                        f11(character12)
+                    end
+
+                local v67, v68 = currentCamera:WorldToViewportPoint(humanoidRootPart2.Position)
+
+                if not (not v68 or v67.Z < 0) then
+                    if not ((humanoidRootPart2.Position - currentCamera.CFrame.Position).Magnitude
+                    > 1200) then
+                    count = count + 1
+
+                    if not (count > 16) then
+                        if not v6[value28] then
+                            v6[value28] = {
+                            Box = Drawing.new("Square"), HBar = Drawing.new("Square"), NameTxt = Drawing.new("Text"), InvTxt = Drawing.new("Text"), TracerLine = Drawing.new("Line"), HeadCircle = Drawing.new("Circle"), SkeletonLines = {}, }
+
+                            local v69 = v6[value28]
+                            v69.Box.Thickness = 1
+                            v69.Box.Filled = false
+                            v69.Box.Color = Color3.new(1, 1, 1)
+                            v69.HBar.Thickness = 1
+                            v69.HBar.Filled = true
+
+                            for index20, value29 in ipairs({ v69.NameTxt, v69.InvTxt }) do
+                                value29.Outline = false
+                                value29.Color = Color3.new(1, 1, 1)
+                                value29.Font = 2
+                            end
+
+                        v69.NameTxt.Center = true
+                        v69.NameTxt.Size = 13
+                        v69.InvTxt.Center = true
+                        v69.InvTxt.Size = 11
+                        v69.TracerLine.Thickness = 1
+                        v69.TracerLine.Color = Color3.new(1, 1, 1)
+                        v69.HeadCircle.Thickness = 1
+                        v69.HeadCircle.Filled = false
+                        v69.HeadCircle.Color = Color3.new(1, 1, 1)
+                    end
+
+                local v70 = v6[value28]
+
+                local worldToViewportPoint = currentCamera:WorldToViewportPoint(head2.Position + Vector3.new(
+                0, 0.7, 0
+                ))
+
+                local vector = Vector3.new(0, 2.8, 0)
+
+                local worldToViewportPoint2 = currentCamera:WorldToViewportPoint(humanoidRootPart2.Position
+                - vector)
+
+                local v71 = math.abs(worldToViewportPoint2.Y - worldToViewportPoint.Y)
+
+                if not (v71 < 1) then
+                    local v72 = v71 * 0.55
+                    local vector2 = Vector2.new(v67.X - v72 / 2, worldToViewportPoint.Y)
+
+                    if v1.BoxesEnabled then
+                        v70.Box.Size = Vector2.new(v72, v71)
+                        v70.Box.Position = vector2
+                        v70.Box.Visible = true
+                    end
+
+                if v1.HealthEnabled then
+                    local v73 = math.clamp(humanoid8.Health / humanoid8.MaxHealth, 0, 1)
+
+                    v70.HBar.Color = Color3.fromHSV(v73 * 0.33, 1, 1)
+                    v70.HBar.Size = Vector2.new(3, v71 * v73)
+
+                    v70.HBar.Position = Vector2.new(
+                    vector2.X - 6, vector2.Y + v71 - v71 * v73
+                    )
+
+                    v70.HBar.Visible = true
+                end
+
+            if v1.NamesEnabled then
+                v70.NameTxt.Text = value28.Name
+                v70.NameTxt.Position = Vector2.new(v67.X, vector2.Y - 16)
+                v70.NameTxt.Visible = true
+            end
+
+        if v1.InvEnabled then
+            v70.InvTxt.Text = f12(value28)
+            v70.InvTxt.Position = Vector2.new(v67.X, vector2.Y + v71 + 4)
+            v70.InvTxt.Visible = true
+        end
+
+    if v1.TracersEnabled then
+        v70.TracerLine.From = Vector2.new(
+        currentCamera.ViewportSize.X / 2, currentCamera.ViewportSize.Y
+        )
+
+        v70.TracerLine.To = Vector2.new(v67.X, v67.Y)
+        v70.TracerLine.Visible = true
+    end
+
+if v1.HeadESPEnabled then
+    local v74, v75 = currentCamera:WorldToViewportPoint(head2.Position)
+
+    if v75 and v74.Z > 0 then
+        v70.HeadCircle.Position = Vector2.new(v74.X, v74.Y)
+        v70.HeadCircle.Radius = 600 / v74.Z
+        v70.HeadCircle.Visible = true
+    end
+end
+
+if v1.SkeletonEnabled and count <= 8 then
+    if #v70.SkeletonLines == 0 then
+        for i = 1, #v32 do
+            local line = Drawing.new("Line")
+            line.Color = Color3.new(1, 1, 1)
+            line.Thickness = 1
+            line.Transparency = 1
+
+            table.insert(v70.SkeletonLines, line)
+        end
+end
+
+for index21, value30 in ipairs(v32) do
+    local findFirstChild2 = character12:FindFirstChild(value30[1])
+    local findFirstChild3 = character12:FindFirstChild(value30[2])
+
+    if findFirstChild2 and findFirstChild3 then
+        local v76, v77 = currentCamera:WorldToViewportPoint(findFirstChild2.Position)
+        local v78, v79 = currentCamera:WorldToViewportPoint(findFirstChild3.Position)
+
+        if v77 and v79 and v76.Z > 0 and v78.Z > 0 then
+            v70.SkeletonLines[index21].From = Vector2.new(v76.X, v76.Y)
+            v70.SkeletonLines[index21].To = Vector2.new(v78.X, v78.Y)
+            v70.SkeletonLines[index21].Visible = true
+        end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+
+v55 = count > 12 and 0.07 or count > 6 and 0.05 or 0.04
+return
+end
+end
+end)
+
+local viewportSize2 = currentCamera.ViewportSize
+x4 = viewportSize2.X
+y = viewportSize2.Y
+v80 = x4 < 700 or y < 500
+v81 = v80 and math.min(x4 - 16, 390) or 460
+end
+
+v82 = v80 and math.min(y - 40, 490) or 420
+v83 = v80 and 42 or 38
+v84 = v80 and 40 or 34
+v85 = v80 and 44 or 36
+textSize = v80 and 14 or 13
+
+v86 = {
+BG = Color3.fromRGB(15, 15, 18), TITLE_BG = Color3.fromRGB(20, 20, 24), TABBAR_BG = Color3.fromRGB(18, 18, 22), TAB_ACTIVE = Color3.fromRGB(255, 255, 255), TAB_IDLE = Color3.fromRGB(82, 82, 96), TAB_HOVER = Color3.fromRGB(175, 175, 190), ROW_BG = Color3.fromRGB(15, 15, 18), ROW_HOVER = Color3.fromRGB(27, 27, 34), TEXT = Color3.fromRGB(228, 228, 234), SUBTEXT = Color3.fromRGB(105, 105, 120), OFF_BG = Color3.fromRGB(35, 35, 44), OFF_TEXT = Color3.fromRGB(150, 150, 165), ON_BG = Color3.fromRGB(255, 255, 255), ON_TEXT = Color3.fromRGB(15, 15, 18), BIND_BG = Color3.fromRGB(40, 40, 52), BIND_TEXT = Color3.fromRGB(195, 195, 210), SEP = Color3.fromRGB(30, 30, 38), WHITE = Color3.new(1, 1, 1), NOTIF_BG = Color3.fromRGB(20, 20, 25), AIM_ON = Color3.fromRGB(75, 195, 95), AIM_OFF = Color3.fromRGB(35, 35, 44), SLIDER_BG = Color3.fromRGB(35, 35, 44), SLIDER_FILL = Color3.fromRGB(215, 215, 228), CARD_BG = Color3.fromRGB(24, 24, 30), CREDIT_BG = Color3.fromRGB(22, 22, 28), DROPDOWN_BG = Color3.fromRGB(20, 20, 30), DROPDOWN_HL = Color3.fromRGB(40, 40, 55), WARN_BG = Color3.fromRGB(80, 40, 10), WARN_TEXT = Color3.fromRGB(255, 180, 60), }
+
+cloudWareV42 = Instance.new("ScreenGui")
+cloudWareV42.Name = "CloudWare_v4"
+cloudWareV42.ResetOnSpawn = false
+cloudWareV42.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+cloudWareV42.IgnoreGuiInset = true
+cloudWareV42.Parent = coreGui
+
+do
+    mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(0, v81, 0, v82)
+    mainFrame.Position = UDim2.new(0.5, -v81 / 2, 0.5, -v82 / 2)
+    mainFrame.BackgroundColor3 = v86.BG
+    mainFrame.BorderSizePixel = 0
+    mainFrame.ZIndex = 5
+    mainFrame.Parent = cloudWareV42
+
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 10)
+
+    local instance = Instance.new("UIStroke", mainFrame)
+    instance.Color = v86.SEP
+    instance.Thickness = 1
+    instance.Transparency = 0.1
+end
+
+do
+    local v87 = {}
+
+    local particles = Instance.new("Frame")
+    particles.Name = "Particles"
+    particles.Size = UDim2.new(1, -4, 1, -(v83 + v84 + 4))
+    particles.Position = UDim2.new(0, 2, 0, v83 + v84 + 2)
+    particles.BackgroundTransparency = 1
+    particles.ClipsDescendants = true
+    particles.ZIndex = 20
+    particles.Parent = mainFrame
+
+    for j = 1, v80 and 18 or 26 do
+        local v88 = math.random(2, 4)
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0, v88, 0, v88)
+        frame.BackgroundColor3 = Color3.new(1, 1, 1)
+        frame.BackgroundTransparency = 1 - math.random(15, 50) / 100
+        frame.BorderSizePixel = 0
+        frame.ZIndex = 20
+        frame.Parent = particles
+
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(1, 0)
+        local v89 = math.random(0, v81 - 4)
+        local v90 = math.random(0, v82)
+
+        v87[j] = {
+        f = frame, spd = math.random(25, 70), x = v89, y = v90, drift = math.random(-10, 10) / 10, }
+
+        frame.Position = UDim2.new(0, v89, 0, v90)
+    end
+
+local v91 = v82 - v83 - v84 - 4
+local v92 = v81 - 4
+local v93 = tick()
+
+runService.RenderStepped:Connect(function()
+    if not v1.ShowSnowParticles then
+        for index22, value31 in ipairs(v87) do
+            value31.f.Visible = false
+        end
+
+    return
+else
+    local v94 = tick()
+    local v95 = v94 - v93
+    v93 = v94
+
+    for index23, value32 in ipairs(v87) do
+        value32.f.Visible = true
+        value32.y = value32.y + value32.spd * v95
+        value32.x = value32.x + value32.drift * v95 * 3
+
+        if value32.y > v91 + 5 then
+            value32.y = -5
+            value32.x = math.random(0, v92)
+        end
+
+    if value32.x < 0 then
+        value32.x = v92
+    end
+
+if value32.x > v92 then
+    value32.x = 0
+end
+
+value32.f.Position = UDim2.new(0, value32.x, 0, value32.y)
+end
+
+return
+end
+end)
+end
+
+do
+    frame2 = Instance.new("Frame")
+    frame2.Size = UDim2.new(1, 0, 0, v83)
+    frame2.BackgroundColor3 = v86.TITLE_BG
+    frame2.BorderSizePixel = 0
+    frame2.ZIndex = 8
+    frame2.Parent = mainFrame
+
+    Instance.new("UICorner", frame2).CornerRadius = UDim.new(0, 10)
+
+    local instance2 = Instance.new("Frame", frame2)
+    instance2.Size = UDim2.new(1, 0, 0.5, 0)
+    instance2.Position = UDim2.new(0, 0, 0.5, 0)
+    instance2.BackgroundColor3 = v86.TITLE_BG
+    instance2.BorderSizePixel = 0
+    instance2.ZIndex = 8
+end
+
+do
+    local instance3 = Instance.new("TextLabel", frame2)
+    instance3.Size = UDim2.new(1, -60, 1, 0)
+    instance3.Position = UDim2.new(0, 14, 0, 0)
+    instance3.BackgroundTransparency = 1
+    instance3.Text = "Lav beby BY Unknow" .. (touchEnabled and " [Mobile]" or "")
+    instance3.TextColor3 = v86.WHITE
+    instance3.Font = Enum.Font.GothamBold
+    instance3.TextSize = v80 and 14 or 15
+    instance3.TextXAlignment = Enum.TextXAlignment.Left
+    instance3.ZIndex = 9
+
+    local v96 = v80 and 34 or 26
+    local v97 = v80 and 26 or 20
+
+    instance4 = Instance.new("TextButton", frame2)
+    instance4.Size = UDim2.new(0, v96, 0, v97)
+    instance4.Position = UDim2.new(1, -(v96 + 10), 0.5, -v97 / 2)
+end
+
+instance4.BackgroundColor3 = v86.WHITE
+instance4.Text = "X"
+instance4.TextColor3 = v86.ON_TEXT
+instance4.Font = Enum.Font.GothamBold
+instance4.TextSize = 11
+instance4.BorderSizePixel = 0
+instance4.ZIndex = 10
+
+Instance.new("UICorner", instance4).CornerRadius = UDim.new(0, 5)
+local instance5
+
+if touchEnabled then
+    instance5 = Instance.new("TextButton", cloudWareV42)
+    instance5.Size = UDim2.new(0, 46, 0, 46)
+    instance5.Position = UDim2.new(0, 8, 0, 8)
+    instance5.BackgroundColor3 = v86.TITLE_BG
+    instance5.BackgroundTransparency = 0.1
+    instance5.Text = "☁"
+    instance5.TextColor3 = v86.WHITE
+    instance5.Font = Enum.Font.GothamBold
+    instance5.TextSize = 22
+    instance5.BorderSizePixel = 0
+    instance5.ZIndex = 30
+
+    Instance.new("UICorner", instance5).CornerRadius = UDim.new(0, 10)
+    Instance.new("UIStroke", instance5).Color = v86.WHITE
+end
+
+if touchEnabled then
+    instance6 = Instance.new("Frame", cloudWareV42)
+    instance6.Size = UDim2.new(0, 72, 0, 72)
+    instance6.Position = UDim2.new(0, 12, 0.65, 0)
+    instance6.BackgroundColor3 = v86.AIM_OFF
+    instance6.BackgroundTransparency = 0.15
+    instance6.BorderSizePixel = 0
+    instance6.Visible = false
+    instance6.ZIndex = 25
+
+    Instance.new("UICorner", instance6).CornerRadius = UDim.new(1, 0)
+
+    instance7 = Instance.new("UIStroke", instance6)
+    instance7.Color = v86.WHITE
+    instance7.Thickness = 1.5
+    instance7.Transparency = 0.5
+
+    local instance8 = Instance.new("TextLabel", instance6)
+    instance8.Size = UDim2.new(1, 0, 0.55, 0)
+    instance8.Position = UDim2.new(0, 0, 0.07, 0)
+    instance8.BackgroundTransparency = 1
+    instance8.Text = "🎯"
+    instance8.TextScaled = true
+    instance8.Font = Enum.Font.Gotham
+    instance8.ZIndex = 26
+
+    local instance9 = Instance.new("TextLabel", instance6)
+    instance9.Size = UDim2.new(1, 0, 0.28, 0)
+    instance9.Position = UDim2.new(0, 0, 0.68, 0)
+    instance9.BackgroundTransparency = 1
+    instance9.Text = "AIM"
+    instance9.TextColor3 = v86.WHITE
+    instance9.Font = Enum.Font.GothamBold
+    instance9.TextSize = 11
+    instance9.ZIndex = 26
+
+    local instance10 = Instance.new("TextButton", instance6)
+    instance10.Size = UDim2.new(1, 0, 1, 0)
+    instance10.BackgroundTransparency = 1
+    instance10.Text = ""
+    instance10.ZIndex = 27
+
+    v98 = false
+    position3 = nil
+
+    function f35(p14)
+        v33 = p14
+
+        tweenService:Create(instance6, TweenInfo.new(0.15), {
+        BackgroundColor3 = p14 and v86.AIM_ON or v86.AIM_OFF, }):Play()
+
+        instance7.Transparency = p14 and 0.1 or 0.5
+    end
+
+position4 = nil
+v99 = false
+
+instance10.InputBegan:Connect(function(input2)
+    if input2.UserInputType == Enum.UserInputType.Touch then
+        v98 = true
+        v99 = false
+        position3 = input2.Position
+        position4 = instance6.Position
+    end
+end)
+
+instance10.InputChanged:Connect(function(input3)
+    if v98 and input3.UserInputType == Enum.UserInputType.Touch then
+        local v100 = input3.Position - position3
+
+        if math.abs(v100.X) > 8 or math.abs(v100.Y) > 8 then
+            v99 = true
+
+            instance6.Position = UDim2.new(
+            position4.X.Scale, position4.X.Offset + v100.X, position4.Y.Scale, position4.Y.Offset + v100.Y
+            )
+        end
+end
+end)
+
+instance10.InputEnded:Connect(function(input4)
+    if input4.UserInputType == Enum.UserInputType.Touch then
+        v98 = false
+
+        if not v99 then
+            f35(not v33)
+        end
+end
+end)
+end
+
+if touchEnabled then
+    instance11 = Instance.new("Frame", cloudWareV42)
+    instance11.Size = UDim2.new(0, 72, 0, 72)
+    instance11.Position = UDim2.new(1, -84, 0.65, 0)
+    instance11.BackgroundColor3 = v86.AIM_OFF
+    instance11.BackgroundTransparency = 0.15
+    instance11.BorderSizePixel = 0
+    instance11.Visible = false
+    instance11.ZIndex = 25
+
+    Instance.new("UICorner", instance11).CornerRadius = UDim.new(1, 0)
+
+    instance13 = Instance.new("UIStroke", instance11)
+    instance13.Color = v86.WHITE
+    instance13.Thickness = 1.5
+    instance13.Transparency = 0.5
+
+    local instance14 = Instance.new("TextLabel", instance11)
+    instance14.Size = UDim2.new(1, 0, 0.55, 0)
+    instance14.Position = UDim2.new(0, 0, 0.07, 0)
+    instance14.BackgroundTransparency = 1
+    instance14.Text = "🗑️"
+    instance14.TextScaled = true
+    instance14.Font = Enum.Font.Gotham
+    instance14.ZIndex = 26
+
+    local instance15 = Instance.new("TextLabel", instance11)
+    instance15.Size = UDim2.new(1, 0, 0.28, 0)
+    instance15.Position = UDim2.new(0, 0, 0.68, 0)
+    instance15.BackgroundTransparency = 1
+    instance15.Text = "DEL"
+    instance15.TextColor3 = v86.WHITE
+    instance15.Font = Enum.Font.GothamBold
+    instance15.TextSize = 11
+    instance15.ZIndex = 26
+
+    local instance16 = Instance.new("TextButton", instance11)
+    instance16.Size = UDim2.new(1, 0, 1, 0)
+    instance16.BackgroundTransparency = 1
+    instance16.Text = ""
+    instance16.ZIndex = 27
+
+    function f36(p15)
+        v101 = p15
+        v1.DeleteActive = p15
+
+        tweenService:Create(instance11, TweenInfo.new(0.15), {
+        BackgroundColor3 = p15 and Color3.fromRGB(195, 75, 75) or v86.AIM_OFF, }):Play()
+
+        instance13.Transparency = p15 and 0.1 or 0.5
+    end
+
+v101 = false
+v102 = false
+position5 = nil
+v103 = false
+
+instance16.InputBegan:Connect(function(input5)
+    if input5.UserInputType == Enum.UserInputType.Touch then
+        v102 = true
+        v103 = false
+        position5 = input5.Position
+    end
+end)
+
+instance16.InputChanged:Connect(function(input6)
+    if v102 and input6.UserInputType == Enum.UserInputType.Touch then
+        local v105 = input6.Position - position5
+
+        if math.abs(v105.X) > 8 or math.abs(v105.Y) > 8 then
+            v103 = true
+        end
+end
+end)
+
+instance16.InputEnded:Connect(function(input7)
+    if input7.UserInputType == Enum.UserInputType.Touch then
+        v102 = false
+
+        if not v103 then
+            if v101 then
+                local target4 = getMouse.Target
+
+                if target4 and target4:IsA("BasePart") and not f26(target4) then
+                    table.insert(v34, { Part = target4, Parent = target4.Parent, CF = target4.CFrame })
+                    target4.Parent = nil
+                end
+        else
+            f36(true)
+        end
+end
+end
+end)
+
+v104 = nil
+
+instance16.InputBegan:Connect(function(input8)
+    if input8.UserInputType == Enum.UserInputType.Touch and v101 then
+        v104 = tick()
+
+        task.delay(0.6, function()
+            if v104 and tick() - v104 >= 0.55 then
+                f36(false)
+                v104 = nil
+            end
+    end)
+end
+end)
+
+instance16.InputEnded:Connect(function(input9)
+    if input9.UserInputType == Enum.UserInputType.Touch then
+        v104 = nil
+    end
+end)
+
+instance12 = Instance.new("Frame", cloudWareV42)
+instance12.Size = UDim2.new(0, 72, 0, 72)
+instance12.Position = UDim2.new(1, -84, 0.65, 80)
+instance12.BackgroundColor3 = v86.AIM_OFF
+instance12.BackgroundTransparency = 0.15
+instance12.BorderSizePixel = 0
+instance12.Visible = false
+instance12.ZIndex = 25
+
+Instance.new("UICorner", instance12).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", instance12).Color = v86.WHITE
+
+local instance17 = Instance.new("TextLabel", instance12)
+instance17.Size = UDim2.new(1, 0, 0.55, 0)
+instance17.Position = UDim2.new(0, 0, 0.07, 0)
+instance17.BackgroundTransparency = 1
+instance17.Text = "↩️"
+instance17.TextScaled = true
+instance17.Font = Enum.Font.Gotham
+instance17.ZIndex = 26
+
+local instance18 = Instance.new("TextLabel", instance12)
+instance18.Size = UDim2.new(1, 0, 0.28, 0)
+instance18.Position = UDim2.new(0, 0, 0.68, 0)
+instance18.BackgroundTransparency = 1
+instance18.Text = "UNDO"
+instance18.TextColor3 = v86.WHITE
+instance18.Font = Enum.Font.GothamBold
+instance18.TextSize = 11
+instance18.ZIndex = 26
+
+local instance19 = Instance.new("TextButton", instance12)
+instance19.Size = UDim2.new(1, 0, 1, 0)
+instance19.BackgroundTransparency = 1
+instance19.Text = ""
+instance19.ZIndex = 27
+
+instance19.InputBegan:Connect(function(input10)
+    if input10.UserInputType == Enum.UserInputType.Touch then
+        if #v34 > 0 then
+            local v106 = table.remove(v34)
+            v106.Part.Parent = v106.Parent
+            v106.Part.CFrame = v106.CF
+        end
+end
+end)
+end
+
+local v107 = 0
+
+local function makeTextLabel(text, text2, p16)
+    local v108 = p16 or 3
+    local v109 = touchEnabled and math.min(240, x4 - 20) or 290
+
+    local instance20 = Instance.new("Frame", cloudWareV42)
+    instance20.Size = UDim2.new(0, v109, 0, 0)
+    instance20.Position = UDim2.new(1, -(v109 + 12), 1, -70 - v107)
+    instance20.BackgroundColor3 = v86.NOTIF_BG
+    instance20.BorderSizePixel = 0
+    instance20.AutomaticSize = Enum.AutomaticSize.Y
+    instance20.ZIndex = 50
+
+    Instance.new("UICorner", instance20).CornerRadius = UDim.new(0, 8)
+
+    local instance21 = Instance.new("UIStroke", instance20)
+    instance21.Color = v86.WHITE
+    instance21.Thickness = 1
+    instance21.Transparency = 0.75
+
+    local instance22 = Instance.new("UIPadding", instance20)
+    instance22.PaddingLeft = UDim.new(0, 12)
+    instance22.PaddingRight = UDim.new(0, 12)
+    instance22.PaddingTop = UDim.new(0, 10)
+    instance22.PaddingBottom = UDim.new(0, 10)
+
+    local instance23 = Instance.new("UIListLayout", instance20)
+    instance23.SortOrder = Enum.SortOrder.LayoutOrder
+    instance23.Padding = UDim.new(0, 3)
+
+    local instance24 = Instance.new("TextLabel", instance20)
+    instance24.Size = UDim2.new(1, 0, 0, 15)
+    instance24.BackgroundTransparency = 1
+    instance24.Text = text
+    instance24.TextColor3 = v86.WHITE
+    instance24.Font = Enum.Font.GothamBold
+    instance24.TextSize = 13
+    instance24.TextXAlignment = Enum.TextXAlignment.Left
+    instance24.LayoutOrder = 1
+    instance24.ZIndex = 51
+
+    local instance25 = Instance.new("TextLabel", instance20)
+    instance25.Size = UDim2.new(1, 0, 0, 0)
+    instance25.AutomaticSize = Enum.AutomaticSize.Y
+    instance25.BackgroundTransparency = 1
+    instance25.Text = text2
+    instance25.TextColor3 = v86.SUBTEXT
+    instance25.Font = Enum.Font.Gotham
+    instance25.TextSize = 12
+    instance25.TextWrapped = true
+    instance25.TextXAlignment = Enum.TextXAlignment.Left
+    instance25.LayoutOrder = 2
+    instance25.ZIndex = 51
+
+    v107 = v107 + 75
+
+    task.delay(v108, function()
+        tweenService:Create(instance20, TweenInfo.new(
+        0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In
+        ), {
+        Position = UDim2.new(1, 20, instance20.Position.Y.Scale, instance20.Position.Y.Offset), }):Play()
+
+        task.wait(0.3)
+        instance20:Destroy()
+        v107 = math.max(0, v107 - 75)
+    end)
+end
+
+do
+    rightControl = Enum.KeyCode.RightControl
+    local v110 = false
+    local position6, position7
+
+    local function f37(position8)
+        if not v110 then
+            return
+        else
+            local v111 = position8 - position6
+
+            mainFrame.Position = UDim2.new(
+            0, math.clamp(position7.X.Offset + v111.X, 0, x4 - v81), 0, math.clamp(position7.Y.Offset + v111.Y, 0, y - v82)
+            )
+
+            return
+        end
+end
+
+frame2.InputBegan:Connect(function(input11)
+    if input11.UserInputType == Enum.UserInputType.MouseButton1 then
+        v110 = true
+        position6 = input11.Position
+        position7 = mainFrame.Position
+    elseif input11.UserInputType == Enum.UserInputType.Touch then
+        v110 = true
+        position6 = input11.Position
+        position7 = mainFrame.Position
+
+        input11.Changed:Connect(function()
+            if input11.UserInputState == Enum.UserInputState.Change then
+                f37(input11.Position)
+            elseif input11.UserInputState == Enum.UserInputState.End then
+            v110 = false
+        end
+end)
+end
+end)
+
+userInputService.InputChanged:Connect(function(input12)
+    if v110 and input12.UserInputType == Enum.UserInputType.MouseMovement then
+        f37(input12.Position)
+    end
+end)
+
+userInputService.InputEnded:Connect(function(input13)
+    if input13.UserInputType == Enum.UserInputType.MouseButton1 then
+        v110 = false
+    end
+end)
+
+instance4.MouseButton1Click:Connect(function()
+    mainFrame.Visible = false
+
+    if touchEnabled and instance5 then
+        instance5.Visible = true
+    end
+
+makeTextLabel("CloudWare", "Hidden. " .. (touchEnabled and "Tap ☁ to reopen." or "Press " .. rightControl.Name .. " to reopen."), 4)
+end)
+
+instance4.InputBegan:Connect(function(input14)
+    if input14.UserInputType == Enum.UserInputType.Touch then
+        mainFrame.Visible = false
+
+        if touchEnabled and instance5 then
+            instance5.Visible = true
+        end
+end
+end)
+
+if not touchEnabled then
+    userInputService.InputBegan:Connect(function(input15, p17)
+        if not p17 and input15.UserInputType == Enum.UserInputType.Keyboard
+        and input15.KeyCode == rightControl then
+        mainFrame.Visible = not mainFrame.Visible
+    end
+end)
+end
+
+local f38
+
+if touchEnabled and instance5 then
+    function f38()
+        mainFrame.Visible = not mainFrame.Visible
+        instance5.Visible = not mainFrame.Visible
+    end
+
+instance5.MouseButton1Click:Connect(f38)
+
+instance5.InputBegan:Connect(function(input16)
+    if input16.UserInputType == Enum.UserInputType.Touch then
+        f38()
+    end
+end)
+end
+end
+
+do
+    frame3 = Instance.new("Frame")
+    frame3.Size = UDim2.new(1, 0, 0, v84)
+    frame3.Position = UDim2.new(0, 0, 0, v83)
+    frame3.BackgroundColor3 = v86.TABBAR_BG
+    frame3.BorderSizePixel = 0
+    frame3.ZIndex = 8
+    frame3.ClipsDescendants = false
+    frame3.Parent = mainFrame
+
+    local instance26 = Instance.new("Frame", mainFrame)
+    instance26.Size = UDim2.new(1, 0, 0, 1)
+    instance26.Position = UDim2.new(0, 0, 0, v83 + v84 - 1)
+    instance26.BackgroundColor3 = v86.SEP
+    instance26.BorderSizePixel = 0
+    instance26.ZIndex = 9
+end
+
+local instance27 = Instance.new("Frame", mainFrame)
+instance27.Size = UDim2.new(1, 0, 1, -(v83 + v84))
+instance27.Position = UDim2.new(0, 0, 0, v83 + v84)
+instance27.BackgroundTransparency = 1
+instance27.ZIndex = 5
+
+local function makeScrollingFrame(instance28)
+    local instance29 = Instance.new("ScrollingFrame", instance28)
+    instance29.Size = UDim2.new(1, 0, 1, 0)
+    instance29.BackgroundTransparency = 1
+    instance29.BorderSizePixel = 0
+    instance29.ScrollBarThickness = v80 and 3 or 2
+    instance29.ScrollBarImageColor3 = v86.SUBTEXT
+    instance29.CanvasSize = UDim2.new(0, 0, 0, 0)
+    instance29.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    instance29.ElasticBehavior = Enum.ElasticBehavior.Never
+    instance29.ScrollingEnabled = true
+    instance29.ZIndex = 6
+
+    local instance30 = Instance.new("UIListLayout", instance29)
+    instance30.SortOrder = Enum.SortOrder.LayoutOrder
+    instance30.Padding = UDim.new(0, 0)
+
+    local instance31 = Instance.new("UIPadding", instance29)
+    instance31.PaddingTop = UDim.new(0, 6)
+    instance31.PaddingBottom = UDim.new(0, 10)
+
+    return instance29
+end
+
+count2 = 0
+
+local function makeTextButton(scroll, text3, index24, index25, p18, p19)
+    count2 = count2 + 1
+    local v112 = p18 or index24
+    local v113 = v80 and 58 or 50
+
+    local instance32 = Instance.new("Frame", scroll)
+    instance32.Size = UDim2.new(1, 0, 0, v113)
+    instance32.BackgroundColor3 = v86.ROW_BG
+    instance32.BorderSizePixel = 0
+    instance32.LayoutOrder = count2
+    instance32.ZIndex = 7
+
+    local instance33 = Instance.new("Frame", instance32)
+    instance33.Size = UDim2.new(1, -32, 0, 1)
+    instance33.Position = UDim2.new(0, 16, 1, -1)
+    instance33.BackgroundColor3 = v86.SEP
+    instance33.BorderSizePixel = 0
+    instance33.ZIndex = 7
+
+    local instance34 = Instance.new("Frame", instance32)
+    instance34.Size = UDim2.new(1, 0, 0, 22)
+    instance34.Position = UDim2.new(0, 0, 0, 6)
+    instance34.BackgroundTransparency = 1
+    instance34.ZIndex = 8
+
+    local instance35 = Instance.new("TextLabel", instance34)
+    instance35.Size = UDim2.new(1, -32, 1, 0)
+    instance35.Position = UDim2.new(0, 16, 0, 0)
+    instance35.BackgroundTransparency = 1
+    instance35.Text = text3 .. tostring(v112)
+    instance35.TextColor3 = v86.TEXT
+    instance35.Font = Enum.Font.Gotham
+    instance35.TextSize = textSize
+    instance35.TextXAlignment = Enum.TextXAlignment.Left
+    instance35.ZIndex = 8
+
+    local v114 = v80 and 5 or 4
+    local v115 = v80 and 15 or 11
+
+    local instance36 = Instance.new("Frame", instance32)
+    instance36.Size = UDim2.new(1, -32, 0, v114)
+    instance36.Position = UDim2.new(0, 16, 0, v113 - v114 - 10)
+    instance36.BackgroundColor3 = v86.SLIDER_BG
+    instance36.BorderSizePixel = 0
+    instance36.ZIndex = 8
+
+    Instance.new("UICorner", instance36).CornerRadius = UDim.new(1, 0)
+
+    local instance37 = Instance.new("Frame", instance36)
+    instance37.Size = UDim2.new((v112 - index24) / (index25 - index24), 0, 1, 0)
+    instance37.BackgroundColor3 = v86.SLIDER_FILL
+    instance37.BorderSizePixel = 0
+    instance37.ZIndex = 9
+
+    Instance.new("UICorner", instance37).CornerRadius = UDim.new(1, 0)
+
+    local instance38 = Instance.new("Frame", instance36)
+    instance38.Size = UDim2.new(0, v115, 0, v115)
+
+    instance38.Position = UDim2.new(
+    (v112 - index24) / (index25 - index24), -v115 / 2, 0.5, -v115 / 2
+    )
+
+    instance38.BackgroundColor3 = v86.WHITE
+    instance38.BorderSizePixel = 0
+    instance38.ZIndex = 10
+
+    Instance.new("UICorner", instance38).CornerRadius = UDim.new(1, 0)
+    local v116 = false
+
+    local instance39 = Instance.new("TextButton", instance32)
+    instance39.Size = UDim2.new(1, 0, 1, 0)
+    instance39.BackgroundTransparency = 1
+    instance39.Text = ""
+    instance39.ZIndex = 11
+
+    local function f39(x5)
+        local v117 = math.clamp(
+        (x5 - instance36.AbsolutePosition.X) / instance36.AbsoluteSize.X, 0, 1
+        )
+
+        v112 = math.round(index24 + v117 * (index25 - index24))
+        instance37.Size = UDim2.new(v117, 0, 1, 0)
+        instance38.Position = UDim2.new(v117, -v115 / 2, 0.5, -v115 / 2)
+        instance35.Text = text3 .. tostring(v112)
+
+        if p19 then
+            p19(v112)
+        end
+end
+
+instance39.InputBegan:Connect(function(input17)
+    if input17.UserInputType == Enum.UserInputType.MouseButton1 then
+        v116 = true
+        f39(input17.Position.X)
+    elseif input17.UserInputType == Enum.UserInputType.Touch then
+        v116 = true
+        f39(input17.Position.X)
+
+        input17.Changed:Connect(function()
+            if not v116 then
+                return
+            end
+
+        if input17.UserInputState == Enum.UserInputState.Change then
+            f39(input17.Position.X)
+        elseif input17.UserInputState == Enum.UserInputState.End then
+        v116 = false
+    end
+end)
+end
+end)
+
+userInputService.InputChanged:Connect(function(input18)
+    if v116 and input18.UserInputType == Enum.UserInputType.MouseMovement then
+        f39(input18.Position.X)
+    end
+end)
+
+userInputService.InputEnded:Connect(function(input19)
+    if input19.UserInputType == Enum.UserInputType.MouseButton1 then
+        v116 = false
+    end
+end)
+end
+
+local function makeTextLabel2(scroll2, text4, p20)
+    count2 = count2 + 1
+
+    local instance40 = Instance.new("Frame", scroll2)
+    instance40.Size = UDim2.new(1, 0, 0, 0)
+    instance40.AutomaticSize = Enum.AutomaticSize.Y
+    instance40.BackgroundTransparency = 1
+    instance40.LayoutOrder = count2
+    instance40.ZIndex = 7
+
+    local instance41 = Instance.new("UIPadding", instance40)
+    instance41.PaddingLeft = UDim.new(0, 16)
+    instance41.PaddingRight = UDim.new(0, 16)
+    instance41.PaddingTop = UDim.new(0, 4)
+    instance41.PaddingBottom = UDim.new(0, 4)
+
+    local instance42 = Instance.new("TextLabel", instance40)
+    instance42.Size = UDim2.new(1, 0, 0, 0)
+    instance42.AutomaticSize = Enum.AutomaticSize.Y
+    instance42.BackgroundTransparency = 1
+    instance42.Text = text4
+    instance42.TextColor3 = p20 or v86.SUBTEXT
+    instance42.Font = Enum.Font.Gotham
+    instance42.TextSize = 12
+    instance42.TextWrapped = true
+    instance42.TextXAlignment = Enum.TextXAlignment.Left
+    instance42.ZIndex = 7
+end
+
+local function makeFrame(scroll3)
+    count2 = count2 + 1
+
+    local instance43 = Instance.new("Frame", scroll3)
+    instance43.Size = UDim2.new(1, 0, 0, 1)
+    instance43.BackgroundColor3 = v86.SEP
+    instance43.BorderSizePixel = 0
+    instance43.LayoutOrder = count2
+    instance43.ZIndex = 7
+end
+
+local function makeTextButton2(backgroundColor3, p21)
+    local v118 = backgroundColor3
+
+    local instance44 = Instance.new("Frame", cloudWareV42)
+    instance44.Size = UDim2.new(0, 180, 0, 160)
+    instance44.BackgroundColor3 = v86.CARD_BG
+    instance44.BorderSizePixel = 0
+    instance44.ZIndex = 80
+    instance44.Visible = false
+
+    Instance.new("UICorner", instance44).CornerRadius = UDim.new(0, 8)
+
+    local instance45 = Instance.new("UIStroke", instance44)
+    instance45.Color = v86.WHITE
+    instance45.Thickness = 1
+    instance45.Transparency = 0.6
+
+    local v119, v120, v121 = Color3.toHSV(v118 or Color3.new(1, 0, 0))
+    local v122 = v120
+    local v123 = v121
+
+    local instance46 = Instance.new("Frame", instance44)
+    instance46.Size = UDim2.new(0, 120, 0, 110)
+    instance46.Position = UDim2.new(0, 8, 0, 8)
+    instance46.BorderSizePixel = 0
+    instance46.ZIndex = 81
+
+    local instance47 = Instance.new("Frame", instance46)
+    instance47.Size = UDim2.new(1, 0, 1, 0)
+    instance47.BackgroundTransparency = 1
+    instance47.BorderSizePixel = 0
+    instance47.ZIndex = 82
+
+    local instance48 = Instance.new("UIGradient", instance47)
+    instance48.Rotation = 0
+
+    instance48.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)), ColorSequenceKeypoint.new(1, Color3.new(1, 1, 1)), })
+
+    instance48.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1), })
+
+    local instance49 = Instance.new("Frame", instance46)
+    instance49.Size = UDim2.new(1, 0, 1, 0)
+    instance49.BackgroundTransparency = 1
+    instance49.BorderSizePixel = 0
+    instance49.ZIndex = 82
+
+    local instance50 = Instance.new("UIGradient", instance49)
+    instance50.Rotation = 90
+
+    instance50.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.new(0, 0, 0)), ColorSequenceKeypoint.new(1, Color3.new(0, 0, 0)), })
+
+    instance50.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0), })
+
+    local function f40(p22)
+        instance46.BackgroundColor3 = Color3.fromHSV(p22, 1, 1)
+    end
+
+f40(v119)
+
+local instance51 = Instance.new("Frame", instance44)
+instance51.Size = UDim2.new(0, 10, 0, 10)
+instance51.AnchorPoint = Vector2.new(0.5, 0.5)
+instance51.BackgroundColor3 = Color3.new(1, 1, 1)
+instance51.BorderSizePixel = 0
+instance51.ZIndex = 85
+
+Instance.new("UICorner", instance51).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", instance51).Color = Color3.new(0, 0, 0)
+
+local function f41()
+    instance51.Position = UDim2.new(0, 8 + v122 * 120, 0, 8 + (1 - v123) * 110)
+end
+
+f41()
+
+local instance52 = Instance.new("Frame", instance44)
+instance52.Size = UDim2.new(0, 12, 0, 110)
+instance52.Position = UDim2.new(0, 136, 0, 8)
+instance52.BorderSizePixel = 0
+instance52.ZIndex = 81
+
+local instance53 = Instance.new("UIGradient", instance52)
+instance53.Rotation = 270
+
+instance53.Color = ColorSequence.new({
+ColorSequenceKeypoint.new(0, Color3.fromHSV(0, 1, 1)), ColorSequenceKeypoint.new(0.17, Color3.fromHSV(0.17, 1, 1)), ColorSequenceKeypoint.new(0.33, Color3.fromHSV(0.33, 1, 1)), ColorSequenceKeypoint.new(0.5, Color3.fromHSV(0.5, 1, 1)), ColorSequenceKeypoint.new(0.67, Color3.fromHSV(0.67, 1, 1)), ColorSequenceKeypoint.new(0.83, Color3.fromHSV(0.83, 1, 1)), ColorSequenceKeypoint.new(1, Color3.fromHSV(1, 1, 1)), })
+
+local instance54 = Instance.new("Frame", instance44)
+instance54.Size = UDim2.new(0, 16, 0, 4)
+instance54.AnchorPoint = Vector2.new(0.5, 0.5)
+instance54.BackgroundColor3 = Color3.new(1, 1, 1)
+instance54.BorderSizePixel = 0
+instance54.ZIndex = 85
+
+Instance.new("UICorner", instance54).CornerRadius = UDim.new(0, 2)
+Instance.new("UIStroke", instance54).Color = Color3.new(0, 0, 0)
+
+local function f42()
+    instance54.Position = UDim2.new(0, 142, 0, 8 + v119 * 110)
+end
+
+f42()
+
+local instance55 = Instance.new("Frame", instance44)
+instance55.Size = UDim2.new(0, 30, 0, 20)
+instance55.Position = UDim2.new(0, 8, 0, 124)
+instance55.BorderSizePixel = 0
+instance55.ZIndex = 81
+
+Instance.new("UICorner", instance55).CornerRadius = UDim.new(0, 4)
+
+local instance56 = Instance.new("TextButton", instance44)
+instance56.Size = UDim2.new(0, 50, 0, 20)
+instance56.Position = UDim2.new(0, 50, 0, 124)
+instance56.BackgroundColor3 = Color3.fromRGB(35, 90, 50)
+instance56.Text = "OK"
+instance56.TextColor3 = Color3.new(1, 1, 1)
+instance56.Font = Enum.Font.GothamBold
+instance56.TextSize = 11
+instance56.BorderSizePixel = 0
+instance56.ZIndex = 82
+
+Instance.new("UICorner", instance56).CornerRadius = UDim.new(0, 4)
+
+local instance57 = Instance.new("TextButton", instance44)
+instance57.Size = UDim2.new(0, 50, 0, 20)
+instance57.Position = UDim2.new(0, 108, 0, 124)
+instance57.BackgroundColor3 = Color3.fromRGB(100, 30, 30)
+instance57.Text = "✕"
+instance57.TextColor3 = Color3.new(1, 1, 1)
+instance57.Font = Enum.Font.GothamBold
+instance57.TextSize = 11
+instance57.BorderSizePixel = 0
+instance57.ZIndex = 82
+
+Instance.new("UICorner", instance57).CornerRadius = UDim.new(0, 4)
+
+local function f43()
+    return Color3.fromHSV(v119, v122, v123)
+end
+
+local function f44()
+    instance55.BackgroundColor3 = f43()
+end
+
+f44()
+
+local v124 = false
+
+local instance58 = Instance.new("TextButton", instance44)
+instance58.Size = UDim2.new(0, 120, 0, 110)
+instance58.Position = UDim2.new(0, 8, 0, 8)
+instance58.BackgroundTransparency = 1
+instance58.Text = ""
+instance58.ZIndex = 84
+
+local function f45(position9)
+    local absolutePosition = instance58.AbsolutePosition
+    local absoluteSize = instance58.AbsoluteSize
+    v122 = math.clamp((position9.X - absolutePosition.X) / absoluteSize.X, 0, 1)
+    v123 = 1 - math.clamp((position9.Y - absolutePosition.Y) / absoluteSize.Y, 0, 1)
+    f41()
+    f44()
+end
+
+instance58.InputBegan:Connect(function(input20)
+    if input20.UserInputType == Enum.UserInputType.MouseButton1
+    or input20.UserInputType == Enum.UserInputType.Touch then
+    v124 = true
+    f45(input20.Position)
+end
+end)
+
+userInputService.InputChanged:Connect(function(input21)
+    if v124
+    and (input21.UserInputType == Enum.UserInputType.MouseMovement
+    or input21.UserInputType == Enum.UserInputType.Touch) then
+    f45(input21.Position)
+end
+end)
+
+userInputService.InputEnded:Connect(function(input22)
+    if input22.UserInputType == Enum.UserInputType.MouseButton1 then
+        v124 = false
+    end
+end)
+
+local v125 = false
+
+local instance59 = Instance.new("TextButton", instance44)
+instance59.Size = UDim2.new(0, 20, 0, 110)
+instance59.Position = UDim2.new(0, 132, 0, 8)
+instance59.BackgroundTransparency = 1
+instance59.Text = ""
+instance59.ZIndex = 84
+
+local function f46(position10)
+    v119 = math.clamp(
+    (position10.Y - instance59.AbsolutePosition.Y) / instance59.AbsoluteSize.Y, 0, 1
+    )
+
+    f40(v119)
+    f42()
+    f44()
+end
+
+instance59.InputBegan:Connect(function(input23)
+    if input23.UserInputType == Enum.UserInputType.MouseButton1
+    or input23.UserInputType == Enum.UserInputType.Touch then
+    v125 = true
+    f46(input23.Position)
+end
+end)
+
+userInputService.InputChanged:Connect(function(input24)
+    if v125
+    and (input24.UserInputType == Enum.UserInputType.MouseMovement
+    or input24.UserInputType == Enum.UserInputType.Touch) then
+    f46(input24.Position)
+end
+end)
+
+userInputService.InputEnded:Connect(function(input25)
+    if input25.UserInputType == Enum.UserInputType.MouseButton1 then
+        v125 = false
+    end
+end)
+
+instance56.MouseButton1Click:Connect(function()
+    local v126 = f43()
+    instance44.Visible = false
+
+    if p21 then
+        p21(v126)
+    end
+end)
+
+instance56.InputBegan:Connect(function(input26)
+    if input26.UserInputType == Enum.UserInputType.Touch then
+        local v127 = f43()
+        instance44.Visible = false
+
+        if p21 then
+            p21(v127)
+        end
+end
+end)
+
+instance57.MouseButton1Click:Connect(function() instance44.Visible = false end)
+
+instance57.InputBegan:Connect(function(input27)
+    if input27.UserInputType == Enum.UserInputType.Touch then
+        instance44.Visible = false
+    end
+end)
+
+return {
+frame = instance44, open = function(p23)
+    local toHSV = Color3.toHSV
+    local v128 = v118
+    local v129, v130
+    v119, v130, v129 = toHSV(v128 or Color3.new(1, 0, 0))
+    v122 = v130
+    v123 = v129
+    f40(v119)
+    f41()
+    f42()
+    f44()
+    local v131 = math.clamp(p23.X, 0, x4 - 180 - 10)
+    local v132 = math.clamp(p23.Y - 160 - 4, 0, y - 160 - 10)
+
+    instance44.Position = UDim2.new(0, v131, 0, v132)
+    instance44.Visible = true
+end, setColor = function(p24)
+v118 = p24
+local v133, v134, v135 = Color3.toHSV(p24)
+v119 = v133
+v122 = v134
+v123 = v135
+end, }
+end
+
+local function makeTextLabel3(scroll4, text5)
+    count2 = count2 + 1
+
+    local instance60 = Instance.new("Frame", scroll4)
+    instance60.Size = UDim2.new(1, 0, 0, 26)
+    instance60.BackgroundTransparency = 1
+    instance60.LayoutOrder = count2
+    instance60.ZIndex = 7
+
+    if text5 and text5 ~= "" then
+        local instance61 = Instance.new("TextLabel", instance60)
+        instance61.Size = UDim2.new(1, -32, 1, 0)
+        instance61.Position = UDim2.new(0, 16, 0, 0)
+        instance61.BackgroundTransparency = 1
+        instance61.Text = text5:upper()
+        instance61.TextColor3 = v86.SUBTEXT
+        instance61.Font = Enum.Font.Gotham
+        instance61.TextSize = 10
+        instance61.TextXAlignment = Enum.TextXAlignment.Left
+        instance61.ZIndex = 7
+    end
+
+local instance62 = Instance.new("Frame", instance60)
+instance62.Size = UDim2.new(1, -32, 0, 1)
+instance62.Position = UDim2.new(0, 16, 1, -1)
+instance62.BackgroundColor3 = v86.SEP
+instance62.BorderSizePixel = 0
+instance62.ZIndex = 7
+end
+
+local v136 = {}
+local v137 = {}
+
+local function makeTextButton3(scroll5)
+    count2 = count2 + 1
+
+    local instance63 = Instance.new("Frame", scroll5)
+    instance63.Size = UDim2.new(1, 0, 0, 0)
+    instance63.AutomaticSize = Enum.AutomaticSize.Y
+    instance63.BackgroundTransparency = 1
+    instance63.LayoutOrder = count2
+    instance63.ZIndex = 7
+
+    Instance.new("UIListLayout", instance63).Padding = UDim.new(0, 0)
+    local v138 = v85 - 4
+    local v139 = false
+
+    local instance64 = Instance.new("Frame", instance63)
+    instance64.Size = UDim2.new(1, 0, 0, v85)
+    instance64.BackgroundColor3 = v86.ROW_BG
+    instance64.BorderSizePixel = 0
+    instance64.LayoutOrder = 1
+    instance64.ZIndex = 7
+
+    local instance65 = Instance.new("Frame", instance64)
+    instance65.Size = UDim2.new(1, -32, 0, 1)
+    instance65.Position = UDim2.new(0, 16, 1, -1)
+    instance65.BackgroundColor3 = v86.SEP
+    instance65.BorderSizePixel = 0
+    instance65.ZIndex = 7
+
+    local instance66 = Instance.new("TextLabel", instance64)
+    instance66.Size = UDim2.new(0.6, 0, 1, 0)
+    instance66.Position = UDim2.new(0, 16, 0, 0)
+    instance66.BackgroundTransparency = 1
+    instance66.Text = "Whitelist Players"
+    instance66.TextColor3 = v86.TEXT
+    instance66.Font = Enum.Font.Gotham
+    instance66.TextSize = textSize
+    instance66.TextXAlignment = Enum.TextXAlignment.Left
+    instance66.ZIndex = 8
+
+    local instance67 = Instance.new("TextLabel", instance64)
+    instance67.Size = UDim2.new(0.25, 0, 1, 0)
+    instance67.Position = UDim2.new(0.6, 0, 0, 0)
+    instance67.BackgroundTransparency = 1
+    instance67.Text = "0 active"
+    instance67.TextColor3 = v86.SUBTEXT
+    instance67.Font = Enum.Font.Gotham
+    instance67.TextSize = 12
+    instance67.TextXAlignment = Enum.TextXAlignment.Right
+    instance67.ZIndex = 8
+
+    local instance68 = Instance.new("TextLabel", instance64)
+    instance68.Size = UDim2.new(0, 20, 1, 0)
+    instance68.Position = UDim2.new(1, -30, 0, 0)
+    instance68.BackgroundTransparency = 1
+    instance68.Text = "v"
+    instance68.TextColor3 = v86.SUBTEXT
+    instance68.Font = Enum.Font.GothamBold
+    instance68.TextSize = 12
+    instance68.ZIndex = 8
+
+    local instance69 = Instance.new("Frame", instance63)
+    instance69.Size = UDim2.new(1, 0, 0, 0)
+    instance69.AutomaticSize = Enum.AutomaticSize.Y
+    instance69.BackgroundColor3 = v86.DROPDOWN_BG
+    instance69.BorderSizePixel = 0
+    instance69.LayoutOrder = 2
+    instance69.ZIndex = 7
+    instance69.Visible = false
+
+    Instance.new("UIListLayout", instance69).Padding = UDim.new(0, 0)
+
+    local instance70 = Instance.new("TextLabel", instance69)
+    instance70.Size = UDim2.new(1, 0, 0, v85 - 4)
+    instance70.BackgroundTransparency = 1
+    instance70.Text = "No other players in server"
+    instance70.TextColor3 = v86.SUBTEXT
+    instance70.Font = Enum.Font.Gotham
+    instance70.TextSize = 12
+    instance70.LayoutOrder = 999
+    instance70.ZIndex = 8
+
+    Instance.new("UIPadding", instance70).PaddingLeft = UDim.new(0, 16)
+    v136 = {}
+    local v140 = v80 and 20 or 15
+
+    local function f47()
+        v139 = not v139
+        instance69.Visible = v139
+        instance68.Text = v139 and "^" or "v"
+    end
+
+local function f48()
+    local count3 = 0
+
+    for key17, value33 in pairs(v2) do
+        if value33 then
+            count3 = count3 + 1
+        end
+end
+
+instance67.Text = count3 > 0 and count3 .. " active" or "0 active"
+local v141 = false
+local v142, v143, v144 = pairs(v136)
+
+if v142(v143, v144) then
+    v141 = true
+end
+
+instance70.Visible = not v141
+end
+
+local function makeTextButton4(text6)
+    local v145 = text6 == localPlayer or v136[text6.Name]
+    local instance71, instance72, instance73, v146, f49
+
+    if v145 then
+        return
+    else
+        instance71 = Instance.new("Frame", instance69)
+        instance71.Size = UDim2.new(1, 0, 0, v138)
+        instance71.BackgroundColor3 = v86.DROPDOWN_BG
+        instance71.BorderSizePixel = 0
+        instance71.LayoutOrder = 1
+        instance71.ZIndex = 8
+
+        local instance74 = Instance.new("Frame", instance71)
+        instance74.Size = UDim2.new(1, -32, 0, 1)
+        instance74.Position = UDim2.new(0, 16, 1, -1)
+        instance74.BackgroundColor3 = v86.SEP
+        instance74.BorderSizePixel = 0
+        instance74.ZIndex = 8
+
+        instance72 = Instance.new("Frame", instance71)
+        instance72.Size = UDim2.new(0, v140, 0, v140)
+        instance72.Position = UDim2.new(0, 16, 0.5, -v140 / 2)
+        instance72.BackgroundColor3 = v86.OFF_BG
+        instance72.BorderSizePixel = 0
+        instance72.ZIndex = 9
+
+        Instance.new("UICorner", instance72).CornerRadius = UDim.new(0, 3)
+
+        instance73 = Instance.new("TextLabel", instance72)
+        instance73.Size = UDim2.new(1, 0, 1, 0)
+        instance73.BackgroundTransparency = 1
+        instance73.Text = "✓"
+        instance73.TextColor3 = v86.ON_TEXT
+        instance73.Font = Enum.Font.GothamBold
+        instance73.TextSize = v140 - 3
+        instance73.Visible = false
+        instance73.ZIndex = 10
+
+        local instance75 = Instance.new("TextLabel", instance71)
+        instance75.Size = UDim2.new(1, -(v140 + 36), 1, 0)
+        instance75.Position = UDim2.new(0, v140 + 24, 0, 0)
+        instance75.BackgroundTransparency = 1
+        instance75.Text = text6.Name
+        instance75.TextColor3 = v86.TEXT
+        instance75.Font = Enum.Font.Gotham
+        instance75.TextSize = textSize
+        instance75.TextXAlignment = Enum.TextXAlignment.Left
+        instance75.ZIndex = 9
+
+        local instance76 = Instance.new("TextButton", instance71)
+        instance76.Size = UDim2.new(1, 0, 1, 0)
+        instance76.BackgroundTransparency = 1
+        instance76.Text = ""
+        instance76.ZIndex = 11
+
+        instance76.MouseEnter:Connect(function()
+            tweenService:Create(instance71, TweenInfo.new(0.1), {
+            BackgroundColor3 = v86.DROPDOWN_HL, }):Play()
+        end)
+
+    instance76.MouseLeave:Connect(function()
+        tweenService:Create(instance71, TweenInfo.new(0.1), {
+        BackgroundColor3 = v86.DROPDOWN_BG, }):Play()
+    end)
+
+v146 = false
+
+function f49(p25)
+    v146 = p25
+    v2[text6.Name] = p25 or nil
+
+    tweenService:Create(instance72, TweenInfo.new(0.15), {
+    BackgroundColor3 = p25 and v86.ON_BG or v86.OFF_BG, }):Play()
+
+    instance73.Visible = p25
+
+    if v1.HitboxEnabled then
+        if p25 and text6.Character then
+            f13(text6.Character)
+        elseif not p25 and text6.Character then
+            f11(text6.Character)
+        end
+end
+
+f48()
+end
+
+instance76.MouseButton1Click:Connect(function() f49(not v146) end)
+
+instance76.InputBegan:Connect(function(input28)
+    if input28.UserInputType == Enum.UserInputType.Touch then
+        f49(not v146)
+    end
+end)
+
+v136[text6.Name] = { row = instance71, set = f49 }
+f48()
+return
+end
+end
+
+local function f50(name3)
+    if v136[name3] then
+        v136[name3].row:Destroy()
+        v136[name3] = nil
+        v2[name3] = nil
+    end
+
+f48()
+end
+
+local instance77 = Instance.new("TextButton", instance64)
+instance77.Size = UDim2.new(1, 0, 1, 0)
+instance77.BackgroundTransparency = 1
+instance77.Text = ""
+instance77.ZIndex = 10
+
+instance77.MouseEnter:Connect(function()
+    tweenService:Create(instance64, TweenInfo.new(0.12), {
+    BackgroundColor3 = v86.ROW_HOVER, }):Play()
+end)
+
+instance77.MouseLeave:Connect(function()
+    tweenService:Create(instance64, TweenInfo.new(0.12), {
+    BackgroundColor3 = v86.ROW_BG, }):Play()
+end)
+
+instance77.MouseButton1Click:Connect(f47)
+
+instance77.InputBegan:Connect(function(input29)
+    if input29.UserInputType == Enum.UserInputType.Touch then
+        f47()
+    end
+end)
+
+for index26, value34 in ipairs(players:GetPlayers()) do
+    makeTextButton4(value34)
+end
+
+f48()
+
+players.PlayerAdded:Connect(function(player3)
+    task.wait(0.3)
+    makeTextButton4(player3)
+end)
+
+players.PlayerRemoving:Connect(function(player4)
+    task.wait(0.1)
+    f50(player4.Name)
+end)
+end
+
+local function makeTextButton5(scroll6, text7, p26, color)
+    count2 = count2 + 1
+
+    local instance78 = Instance.new("Frame", scroll6)
+    instance78.Size = UDim2.new(1, 0, 0, v85 + 8)
+    instance78.BackgroundTransparency = 1
+    instance78.LayoutOrder = count2
+    instance78.ZIndex = 7
+
+    local instance79 = Instance.new("TextButton", instance78)
+    instance79.Size = UDim2.new(1, -32, 0, v85 - 2)
+    instance79.Position = UDim2.new(0, 16, 0, 4)
+    instance79.BackgroundColor3 = color or v86.OFF_BG
+    instance79.Text = text7
+    instance79.TextColor3 = v86.TEXT
+    instance79.Font = Enum.Font.GothamBold
+    instance79.TextSize = textSize
+    instance79.BorderSizePixel = 0
+    instance79.ZIndex = 8
+
+    Instance.new("UICorner", instance79).CornerRadius = UDim.new(0, 6)
+    local offBG = color or v86.OFF_BG
+
+    instance79.MouseEnter:Connect(function()
+        tweenService:Create(instance79, TweenInfo.new(0.12), {
+        BackgroundColor3 = v86.ROW_HOVER, }):Play()
+    end)
+
+instance79.MouseLeave:Connect(function()
+    tweenService:Create(instance79, TweenInfo.new(0.12), { BackgroundColor3 = offBG }):Play()
+end)
+
+instance79.MouseButton1Click:Connect(function()
+    if p26 then
+        p26()
+    end
+end)
+
+instance79.InputBegan:Connect(function(input30)
+    if input30.UserInputType == Enum.UserInputType.Touch then
+        tweenService:Create(instance79, TweenInfo.new(0.1), {
+        BackgroundColor3 = v86.ROW_HOVER, }):Play()
+    end
+end)
+
+instance79.InputEnded:Connect(function(input31)
+    if input31.UserInputType == Enum.UserInputType.Touch then
+        tweenService:Create(instance79, TweenInfo.new(0.12), { BackgroundColor3 = offBG }):Play()
+
+        if p26 then
+            p26()
+        end
+end
+end)
+end
+
+local function makeTextButton6(scroll7, text8, globalShadows, p27, p28, p29, p30, p31)
+    count2 = count2 + 1
+    local v147 = globalShadows or false
+    local v148 = p28 ~= nil
+    local v149 = p30 ~= nil
+
+    local instance80 = Instance.new("Frame", scroll7)
+    instance80.Size = UDim2.new(1, 0, 0, v85)
+    instance80.BackgroundColor3 = v86.ROW_BG
+    instance80.BorderSizePixel = 0
+    instance80.LayoutOrder = count2
+    instance80.ZIndex = 7
+
+    local instance81 = Instance.new("Frame", instance80)
+    instance81.Size = UDim2.new(1, -32, 0, 1)
+    instance81.Position = UDim2.new(0, 16, 1, -1)
+    instance81.BackgroundColor3 = v86.SEP
+    instance81.BorderSizePixel = 0
+    instance81.ZIndex = 7
+
+    local v150 = v80 and 46 or 38
+    local v151 = v80 and 26 or 20
+    local v152 = v80 and 40 or 34
+    local v153 = v80 and 26 or 20
+    local v154 = -(v150 + 12)
+    local v155 = v154 - v152 - 6
+    local v156 = (v148 and v155 or v154) - v153
+    local v157 = v150 + 12
+    local v158 = v156 - 6
+    local v159 = v157 + (v148 and v152 + 6 or 0) + (v149 and v153 + 6 or 0)
+
+    local instance82 = Instance.new("TextLabel", instance80)
+    instance82.Size = UDim2.new(1, -(v159 + 16), 1, 0)
+    instance82.Position = UDim2.new(0, 16, 0, 0)
+    instance82.BackgroundTransparency = 1
+    instance82.Text = text8
+    instance82.TextColor3 = v86.TEXT
+    instance82.Font = Enum.Font.Gotham
+    instance82.TextSize = textSize
+    instance82.TextXAlignment = Enum.TextXAlignment.Left
+    instance82.TextWrapped = true
+    instance82.ZIndex = 8
+
+    local instance83 = Instance.new("Frame", instance80)
+    instance83.Size = UDim2.new(0, v150, 0, v151)
+    instance83.Position = UDim2.new(1, v154, 0.5, -v151 / 2)
+    instance83.BackgroundColor3 = v147 and v86.ON_BG or v86.OFF_BG
+    instance83.BorderSizePixel = 0
+    instance83.ZIndex = 8
+
+    Instance.new("UICorner", instance83).CornerRadius = UDim.new(0, 5)
+
+    local instance84 = Instance.new("TextLabel", instance83)
+    instance84.Size = UDim2.new(1, 0, 1, 0)
+    instance84.BackgroundTransparency = 1
+    instance84.Text = v147 and "ON" or "OFF"
+    instance84.TextColor3 = v147 and v86.ON_TEXT or v86.OFF_TEXT
+    instance84.Font = Enum.Font.GothamBold
+    instance84.TextSize = 11
+    instance84.ZIndex = 9
+
+    local instance85 = Instance.new("TextButton", instance80)
+    instance85.Size = UDim2.new(1, 0, 1, 0)
+    instance85.BackgroundTransparency = 1
+    instance85.Text = ""
+    instance85.ZIndex = 10
+
+    instance85.MouseEnter:Connect(function()
+        tweenService:Create(instance80, TweenInfo.new(0.12), {
+        BackgroundColor3 = v86.ROW_HOVER, }):Play()
+    end)
+
+instance85.MouseLeave:Connect(function()
+    tweenService:Create(instance80, TweenInfo.new(0.12), {
+    BackgroundColor3 = v86.ROW_BG, }):Play()
+end)
+
+local function f51()
+    v147 = not v147
+
+    tweenService:Create(instance83, TweenInfo.new(0.15), {
+    BackgroundColor3 = v147 and v86.ON_BG or v86.OFF_BG, }):Play()
+
+    instance84.Text = v147 and "ON" or "OFF"
+    instance84.TextColor3 = v147 and v86.ON_TEXT or v86.OFF_TEXT
+
+    if p27 then
+        p27(v147)
+    end
+end
+
+instance85.MouseButton1Click:Connect(f51)
+
+instance85.InputBegan:Connect(function(input32)
+    if input32.UserInputType == Enum.UserInputType.Touch then
+        f51()
+    end
+end)
+
+local sub, v160, instance86, f52
+
+if v148 then
+    sub = p28
+    v160 = false
+
+    local instance87 = Instance.new("Frame", instance80)
+    instance87.Size = UDim2.new(0, v152, 0, v151)
+    instance87.Position = UDim2.new(1, v155, 0.5, -v151 / 2)
+    instance87.BackgroundColor3 = v86.BIND_BG
+    instance87.BorderSizePixel = 0
+    instance87.ZIndex = 11
+
+    Instance.new("UICorner", instance87).CornerRadius = UDim.new(0, 5)
+
+    instance86 = Instance.new("TextLabel", instance87)
+    instance86.Size = UDim2.new(1, 0, 1, 0)
+    instance86.BackgroundTransparency = 1
+    instance86.Text = sub
+    instance86.TextColor3 = v86.BIND_TEXT
+    instance86.Font = Enum.Font.GothamBold
+    instance86.TextSize = 11
+    instance86.ZIndex = 12
+
+    local instance88 = Instance.new("TextButton", instance87)
+    instance88.Size = UDim2.new(1, 0, 1, 0)
+    instance88.BackgroundTransparency = 1
+    instance88.Text = ""
+    instance88.ZIndex = 20
+
+    function f52()
+        if v160 then
+            return
+        end
+
+    v160 = true
+
+    instance86.Text = "..."
+    instance86.TextColor3 = v86.SUBTEXT
+
+    local connect = nil
+
+    connect = userInputService.InputBegan:Connect(function(input33, p32)
+        if input33.UserInputType ~= Enum.UserInputType.Keyboard then
+            return
+        end
+
+    connect:Disconnect()
+    v160 = false
+
+    if input33.KeyCode == Enum.KeyCode.Delete or input33.KeyCode == Enum.KeyCode.Backspace then
+        sub = "None"
+
+        instance86.Text = "None"
+        instance86.TextColor3 = v86.SUBTEXT
+
+        if p29 then
+            p29(nil)
+        end
+
+    return
+end
+
+sub = input33.KeyCode.Name:sub(1, 7)
+
+instance86.Text = sub
+instance86.TextColor3 = v86.BIND_TEXT
+
+if p29 then
+    p29(input33.KeyCode)
+end
+end)
+
+task.delay(8, function()
+    if v160 then
+        v160 = false
+        connect:Disconnect()
+        instance86.Text = sub
+    end
+end)
+end
+
+instance88.MouseButton1Click:Connect(f52)
+
+instance88.InputBegan:Connect(function(input34)
+    if input34.UserInputType == Enum.UserInputType.Touch then
+        f52()
+    end
+end)
+end
+
+local instance89, v161, f53
+
+if v149 then
+    local color2 = p30 or Color3.new(1, 0, 0)
+
+    instance89 = Instance.new("Frame", instance80)
+    instance89.Size = UDim2.new(0, v153, 0, v153)
+    instance89.Position = UDim2.new(1, v158, 0.5, -v153 / 2)
+    instance89.BackgroundColor3 = color2
+    instance89.BorderSizePixel = 0
+    instance89.ZIndex = 11
+
+    Instance.new("UICorner", instance89).CornerRadius = UDim.new(0, 4)
+    Instance.new("UIStroke", instance89).Color = v86.SEP
+
+    v161 = nil
+
+    local instance90 = Instance.new("TextButton", instance89)
+    instance90.Size = UDim2.new(1, 0, 1, 0)
+    instance90.BackgroundTransparency = 1
+    instance90.Text = ""
+    instance90.ZIndex = 20
+
+    function f53()
+        if not v161 then
+            v161 = makeTextButton2(instance89.BackgroundColor3, function(p33)
+                instance89.BackgroundColor3 = p33
+
+                if p31 then
+                    p31(p33)
+                end
+
+            if v161 then
+                v161.setColor(p33)
+            end
+    end)
+end
+
+v161.open(instance89.AbsolutePosition)
+end
+
+instance90.MouseButton1Click:Connect(f53)
+
+instance90.InputBegan:Connect(function(input35)
+    if input35.UserInputType == Enum.UserInputType.Touch then
+        f53()
+    end
+end)
+
+return function(p34, p35)
+    v147 = p34
+    instance83.BackgroundColor3 = v147 and v86.ON_BG or v86.OFF_BG
+
+    instance84.Text = v147 and "ON" or "OFF"
+    instance84.TextColor3 = v147 and v86.ON_TEXT or v86.OFF_TEXT
+
+    if p35 then
+        instance89.BackgroundColor3 = p35
+    end
+end
+end
+
+return function(p36)
+    v147 = p36
+    instance83.BackgroundColor3 = v147 and v86.ON_BG or v86.OFF_BG
+
+    instance84.Text = v147 and "ON" or "OFF"
+    instance84.TextColor3 = v147 and v86.ON_TEXT or v86.OFF_TEXT
+end
+end
+
+local function makeTextButton7(scroll8, text9, index27, p37, p38)
+    count2 = count2 + 1
+    local v162 = p37 or index27[1]
+    local v163 = false
+    local v164 = v85 - 4
+
+    local instance91 = Instance.new("Frame", scroll8)
+    instance91.Size = UDim2.new(1, 0, 0, v85)
+    instance91.BackgroundColor3 = v86.ROW_BG
+    instance91.BorderSizePixel = 0
+    instance91.LayoutOrder = count2
+    instance91.ZIndex = 7
+    instance91.ClipsDescendants = true
+
+    local instance92 = Instance.new("Frame", instance91)
+    instance92.Size = UDim2.new(1, -32, 0, 1)
+    instance92.Position = UDim2.new(0, 16, 1, -1)
+    instance92.BackgroundColor3 = v86.SEP
+    instance92.BorderSizePixel = 0
+    instance92.ZIndex = 7
+
+    local instance93 = Instance.new("TextButton", instance91)
+    instance93.Size = UDim2.new(1, 0, 0, v85)
+    instance93.BackgroundTransparency = 1
+    instance93.Text = ""
+    instance93.ZIndex = 10
+
+    local instance94 = Instance.new("TextLabel", instance93)
+    instance94.Size = UDim2.new(0.55, 0, 1, 0)
+    instance94.Position = UDim2.new(0, 16, 0, 0)
+    instance94.BackgroundTransparency = 1
+    instance94.Text = text9
+    instance94.TextColor3 = v86.TEXT
+    instance94.Font = Enum.Font.Gotham
+    instance94.TextSize = textSize
+    instance94.TextXAlignment = Enum.TextXAlignment.Left
+    instance94.ZIndex = 11
+
+    local instance95 = Instance.new("TextLabel", instance93)
+    instance95.Size = UDim2.new(0.3, 0, 1, 0)
+    instance95.Position = UDim2.new(0.6, 0, 0, 0)
+    instance95.BackgroundTransparency = 1
+    instance95.Text = v162
+    instance95.TextColor3 = v86.SLIDER_FILL
+    instance95.Font = Enum.Font.GothamBold
+    instance95.TextSize = 12
+    instance95.TextXAlignment = Enum.TextXAlignment.Right
+    instance95.ZIndex = 11
+
+    local instance96 = Instance.new("TextLabel", instance93)
+    instance96.Size = UDim2.new(0, 20, 1, 0)
+    instance96.Position = UDim2.new(1, -30, 0, 0)
+    instance96.BackgroundTransparency = 1
+    instance96.Text = "v"
+    instance96.TextColor3 = v86.SUBTEXT
+    instance96.Font = Enum.Font.GothamBold
+    instance96.TextSize = 12
+    instance96.ZIndex = 11
+
+    local instance97 = Instance.new("Frame", instance91)
+    instance97.Size = UDim2.new(1, 0, 0, #index27 * v164)
+    instance97.Position = UDim2.new(0, 0, 0, v85)
+    instance97.BackgroundColor3 = v86.DROPDOWN_BG
+    instance97.BorderSizePixel = 0
+    instance97.ZIndex = 9
+
+    Instance.new("UIListLayout", instance97).SortOrder = Enum.SortOrder.LayoutOrder
+
+    for index28, value35 in ipairs(index27) do
+        local v165 = value35
+
+        local instance98 = Instance.new("TextButton", instance97)
+        instance98.Size = UDim2.new(1, 0, 0, v164)
+        instance98.BackgroundColor3 = v86.DROPDOWN_BG
+        instance98.BackgroundTransparency = v165 == v162 and 0.6 or 1
+        instance98.Text = ""
+        instance98.BorderSizePixel = 0
+        instance98.ZIndex = 12
+
+        local instance99 = Instance.new("TextLabel", instance98)
+        instance99.Size = UDim2.new(1, -32, 1, 0)
+        instance99.Position = UDim2.new(0, 28, 0, 0)
+        instance99.BackgroundTransparency = 1
+        instance99.Font = Enum.Font.Gotham
+        instance99.TextSize = 12
+        instance99.TextXAlignment = Enum.TextXAlignment.Left
+        instance99.ZIndex = 13
+        instance99.Text = v165
+        instance99.TextColor3 = v165 == v162 and v86.SLIDER_FILL or v86.TEXT
+
+        local instance100 = Instance.new("Frame", instance98)
+        instance100.Size = UDim2.new(0, 5, 0, 5)
+        instance100.Position = UDim2.new(0, 16, 0.5, -2)
+        instance100.BackgroundColor3 = v86.SLIDER_FILL
+        instance100.BorderSizePixel = 0
+        instance100.Visible = v165 == v162
+        instance100.ZIndex = 13
+
+        Instance.new("UICorner", instance100).CornerRadius = UDim.new(1, 0)
+
+        instance98.MouseEnter:Connect(function()
+            tweenService:Create(instance98, TweenInfo.new(0.1), {
+            BackgroundColor3 = v86.DROPDOWN_HL, BackgroundTransparency = 0, }):Play()
+        end)
+
+    instance98.MouseLeave:Connect(function()
+        tweenService:Create(instance98, TweenInfo.new(0.1), {
+        BackgroundColor3 = v86.DROPDOWN_BG, BackgroundTransparency = instance99.Text == v162 and 0.6 or 1, }):Play()
+    end)
+
+local function f54()
+    for index29, value36 in ipairs(instance97:GetChildren()) do
+        if value36:IsA("TextButton") then
+            local textLabel = value36:FindFirstChildOfClass("TextLabel")
+            local frame4 = value36:FindFirstChildOfClass("Frame")
+
+            if textLabel then
+                textLabel.TextColor3 = v86.TEXT
+            end
+
+        if frame4 then
+            frame4.Visible = false
+        end
+
+    value36.BackgroundTransparency = 1
+end
+end
+
+v162 = v165
+instance95.Text = v165
+instance99.TextColor3 = v86.SLIDER_FILL
+instance100.Visible = true
+instance98.BackgroundTransparency = 0.6
+v163 = false
+
+tweenService:Create(instance91, TweenInfo.new(0.15), {
+Size = UDim2.new(1, 0, 0, v85), }):Play()
+
+instance96.Text = "v"
+
+if p38 then
+    p38(v165)
+end
+end
+
+instance98.MouseButton1Click:Connect(f54)
+
+instance98.InputBegan:Connect(function(input36)
+    if input36.UserInputType == Enum.UserInputType.Touch then
+        f54()
+    end
+end)
+end
+
+instance93.MouseEnter:Connect(function()
+    tweenService:Create(instance91, TweenInfo.new(0.12), {
+    BackgroundColor3 = v86.ROW_HOVER, }):Play()
+end)
+
+instance93.MouseLeave:Connect(function()
+    tweenService:Create(instance91, TweenInfo.new(0.12), {
+    BackgroundColor3 = v86.ROW_BG, }):Play()
+end)
+
+local function f55()
+    v163 = not v163
+    local v166 = v163 and v85 + #index27 * v164 or v85
+
+    tweenService:Create(instance91, TweenInfo.new(0.15), {
+    Size = UDim2.new(1, 0, 0, v166), }):Play()
+
+    instance96.Text = v163 and "^" or "v"
+end
+
+instance93.MouseButton1Click:Connect(f55)
+
+instance93.InputBegan:Connect(function(input37)
+    if input37.UserInputType == Enum.UserInputType.Touch then
+        f55()
+    end
+end)
+
+return instance91
+end
+
+local v167 = math.floor(v81 / 4)
+local v168
+
+local function f56(combat)
+    if v168 then
+        v168.frame.Visible = false
+        v168.lbl.TextColor3 = v86.TAB_IDLE
+        v168.ind.Visible = false
+        v168.btn.BackgroundColor3 = v86.TABBAR_BG
+    end
+
+v168 = combat
+
+combat.frame.Visible = true
+combat.lbl.TextColor3 = v86.TAB_ACTIVE
+combat.ind.Visible = true
+combat.btn.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+end
+
+local function makeTextButton8(text10)
+    local instance101 = Instance.new("TextButton", frame3)
+    instance101.Size = UDim2.new(0, v167, 1, 0)
+    instance101.Position = UDim2.new(0, #v137 * v167, 0, 0)
+    instance101.BackgroundColor3 = v86.TABBAR_BG
+    instance101.BackgroundTransparency = 0
+    instance101.Text = ""
+    instance101.BorderSizePixel = 0
+    instance101.ZIndex = 9
+
+    local instance102 = Instance.new("Frame", instance101)
+    instance102.Size = UDim2.new(0.75, 0, 0, 2)
+    instance102.Position = UDim2.new(0.125, 0, 1, -2)
+    instance102.BackgroundColor3 = v86.WHITE
+    instance102.BorderSizePixel = 0
+    instance102.Visible = false
+    instance102.ZIndex = 10
+
+    Instance.new("UICorner", instance102).CornerRadius = UDim.new(1, 0)
+
+    local instance103 = Instance.new("TextLabel", instance101)
+    instance103.Size = UDim2.new(1, 0, 1, 0)
+    instance103.BackgroundTransparency = 1
+    instance103.Text = text10
+    instance103.TextColor3 = v86.TAB_IDLE
+    instance103.Font = Enum.Font.GothamBold
+    instance103.TextSize = v80 and 11 or 10
+    instance103.ZIndex = 10
+
+    local instance104 = Instance.new("Frame", instance27)
+    instance104.Size = UDim2.new(1, 0, 1, 0)
+    instance104.BackgroundTransparency = 1
+    instance104.Visible = false
+    instance104.ZIndex = 6
+
+    local v169 = {
+    btn = instance101, frame = instance104, scroll = makeScrollingFrame(instance104), lbl = instance103, ind = instance102, }
+
+    table.insert(v137, v169)
+
+    instance101.MouseButton1Click:Connect(function() f56(v169) end)
+
+    instance101.InputBegan:Connect(function(input38)
+        if input38.UserInputType == Enum.UserInputType.Touch then
+            f56(v169)
+        end
+end)
+
+instance101.MouseEnter:Connect(function()
+    if v168 ~= v169 then
+        instance103.TextColor3 = v86.TAB_HOVER
+    end
+end)
+
+instance101.MouseLeave:Connect(function()
+    if v168 ~= v169 then
+        instance103.TextColor3 = v86.TAB_IDLE
+    end
+end)
+
+return v169
+end
+
+combat2 = makeTextButton8("COMBAT")
+scroll9 = combat2.scroll
+makeTextLabel3(scroll9, "Aimbot")
+
+makeTextButton6(scroll9, "Aimbot Enabled", false, function(p39)
+    v1.AimActive = p39
+
+    if touchEnabled and instance6 then
+        instance6.Visible = p39
+    end
+
+if not p39 then
+    v33 = false
+    v1.AimToggleState = false
+end
+end, not touchEnabled and "E" or nil, function(aimbotKey) _G.AimbotKey = aimbotKey end)
+
+count2 = count2 + 1
+
+instance105 = Instance.new("Frame", scroll9)
+instance105.Size = UDim2.new(1, 0, 0, 0)
+instance105.AutomaticSize = Enum.AutomaticSize.Y
+instance105.BackgroundTransparency = 1
+instance105.LayoutOrder = count2
+instance105.ZIndex = 7
+instance105.Visible = false
+
+do
+    instance106 = Instance.new("Frame", instance105)
+    instance106.Size = UDim2.new(1, -32, 0, 0)
+    instance106.AutomaticSize = Enum.AutomaticSize.Y
+    instance106.Position = UDim2.new(0, 16, 0, 2)
+    instance106.BackgroundColor3 = v86.WARN_BG
+    instance106.BorderSizePixel = 0
+    instance106.ZIndex = 8
+
+    Instance.new("UICorner", instance106).CornerRadius = UDim.new(0, 6)
+
+    local instance107 = Instance.new("UIStroke", instance106)
+    instance107.Color = v86.WARN_TEXT
+    instance107.Thickness = 1
+    instance107.Transparency = 0.5
+end
+
+do
+    local instance108 = Instance.new("UIPadding", instance106)
+    instance108.PaddingLeft = UDim.new(0, 10)
+    instance108.PaddingRight = UDim.new(0, 10)
+    instance108.PaddingTop = UDim.new(0, 7)
+    instance108.PaddingBottom = UDim.new(0, 7)
+
+    Instance.new("UIListLayout", instance106).Padding = UDim.new(0, 3)
+
+    local instance109 = Instance.new("TextLabel", instance106)
+    instance109.Size = UDim2.new(1, 0, 0, 15)
+    instance109.BackgroundTransparency = 1
+    instance109.Text = "⚠  CURSOR MODE — requires mousemoverel"
+    instance109.TextColor3 = v86.WARN_TEXT
+    instance109.Font = Enum.Font.GothamBold
+    instance109.TextSize = 12
+    instance109.TextXAlignment = Enum.TextXAlignment.Left
+    instance109.LayoutOrder = 1
+    instance109.ZIndex = 9
+end
+
+do
+    local instance110 = Instance.new("TextLabel", instance106)
+    instance110.Size = UDim2.new(1, 0, 0, 0)
+    instance110.AutomaticSize = Enum.AutomaticSize.Y
+    instance110.BackgroundTransparency = 1
+    instance110.TextColor3 = Color3.fromRGB(220, 160, 50)
+
+    instance110.Text = [[
+    Falls back to Camera mode if mousemoverel
+    is unavailable in your executor.]]
+
+    instance110.Font = Enum.Font.Gotham
+    instance110.TextSize = 11
+    instance110.TextWrapped = true
+    instance110.TextXAlignment = Enum.TextXAlignment.Left
+    instance110.LayoutOrder = 2
+    instance110.ZIndex = 9
+end
+
+makeTextButton7(scroll9, "Aim Mode", { "Camera", "Cursor" }, "Camera", function(p40)
+    if p40 == "Camera" then
+        v1.AimMode = "Camera"
+        instance105.Visible = false
+    else
+        v1.AimMode = "Cursor"
+        instance105.Visible = true
+        makeTextLabel("Cursor Mode", "Requires mousemoverel.", 4)
+    end
+end)
+
+makeTextButton7(scroll9, "Activation", { "Hold", "Toggle" }, "Hold", function(p41)
+    v1.AimHoldMode = p41 == "Hold"
+    v1.AimToggleState = false
+end)
+
+makeTextButton(scroll9, "FOV: ", 0, 600, 100, function(aimFOVSize2)
+    v1.AimFOVSize = aimFOVSize2
+end)
+
+makeTextButton(scroll9, "Smoothness: ", 1, 5, 3, function(aimSmoothness4)
+    v1.AimSmoothness = aimSmoothness4
+end)
+
+makeTextButton6(scroll9, "Show FOV Circle", false, function(aimFOVEnabled2)
+    v1.AimFOVEnabled = aimFOVEnabled2
+end)
+
+makeTextButton6(scroll9, "Wall Check", false, function(aimWallCheck2)
+    v1.AimWallCheck = aimWallCheck2
+end)
+
+makeFrame(scroll9)
+makeTextLabel3(scroll9, "Hitbox (Torso — no collision)")
+
+makeTextButton6(scroll9, "Hitbox Expander", false, function(p42)
+    v1.HitboxEnabled = p42
+
+    if p42 then
+        f14()
+        makeTextLabel("Warning", "Hitbox enabled. Use at own risk!", 4)
+    else
+        f15()
+    end
+end, not touchEnabled and "None" or nil, function(hitboxKey) _G.HitboxKey = hitboxKey end)
+
+makeTextButton(scroll9, "Hitbox Size: ", 3, 10, 3, function(hitboxSize2)
+    v1.HitboxSize = hitboxSize2
+
+    if v1.HitboxEnabled then
+        f14()
+    end
+end)
+
+makeTextButton(scroll9, "Hitbox Transparency: ", 0, 10, 5, function(p43)
+    v1.HitboxTransparency = p43 / 10
+
+    if v1.HitboxEnabled then
+        f14()
+    end
+end)
+
+makeFrame(scroll9)
+makeTextLabel3(scroll9, "Whitelist")
+makeTextButton3(scroll9)
+scroll10 = makeTextButton8("VISUALS").scroll
+makeTextLabel3(scroll10, "ESP Master")
+
+makeTextButton6(scroll10, "ESP Visible", true, function(p44)
+    v1.ESPVisible = p44
+
+    if not p44 then
+        for key18 in pairs(v9) do
+            f4(key18)
+        end
+end
+end, not touchEnabled and "None" or nil, function(espKey) _G.ESPKey = espKey end)
+
+makeFrame(scroll10)
+makeTextLabel3(scroll10, "Player ESP")
+
+makeTextButton6(scroll10, "Box ESP", false, function(boxesEnabled2)
+    v1.BoxesEnabled = boxesEnabled2
+end)
+
+makeTextButton6(scroll10, "Tracers", false, function(tracersEnabled)
+    v1.TracersEnabled = tracersEnabled
+end)
+
+makeTextButton6(scroll10, "Head Circle ESP", false, function(headESPEnabled)
+    v1.HeadESPEnabled = headESPEnabled
+end)
+
+makeTextButton6(scroll10, "Show Username", false, function(namesEnabled2)
+    v1.NamesEnabled = namesEnabled2
+end)
+
+makeTextButton6(scroll10, "Health Bar", false, function(healthEnabled2)
+    v1.HealthEnabled = healthEnabled2
+end)
+
+makeTextButton6(scroll10, "Inventory & Equipped", false, function(invEnabled2)
+    v1.InvEnabled = invEnabled2
+end)
+
+makeTextButton6(scroll10, "Skeleton ESP", false, function(skeletonEnabled2)
+    v1.SkeletonEnabled = skeletonEnabled2
+end)
+
+makeFrame(scroll10)
+makeTextLabel3(scroll10, "Highlight ESP")
+
+makeTextButton6(scroll10, "Player Highlight", false, function(p45)
+    v1.HighlightEnabled = p45
+
+    if not p45 then
+        for key19 in pairs(v9) do
+            f4(key19)
+        end
+else
+    for index30, value37 in ipairs(players:GetPlayers()) do
+        if value37 ~= localPlayer and f5(value37) then
+            f7(value37)
+        end
+end
+
+makeTextLabel("Highlight", "Player highlight enabled.", 3)
+end
+end, nil, nil, v1.HighlightColor, function(p46)
+v1.HighlightColor = p46
+
+for key20, value38 in pairs(v9) do
+    value38.FillColor = p46
+end
+end)
+
+makeTextButton(scroll10, "Fill Opacity: ", 0, 10, 5, function(p47)
+    v1.HighlightFillTrans = p47 / 10
+
+    for key21, value39 in pairs(v9) do
+        value39.FillTransparency = v1.HighlightFillTrans
+    end
+end)
+
+makeTextButton6(scroll10, "Tool Highlight", false, function(p48)
+    v1.ToolHighlightEnabled = p48
+
+    if not p48 then
+        for key22 in pairs(v10) do
+            f4(key22)
+        end
+else
+    makeTextLabel("Tool Highlight", "Highlights equipped tools.", 3)
+end
+end, nil, nil, v1.ToolHighlightColor, function(p49)
+v1.ToolHighlightColor = p49
+
+for key23, value40 in pairs(v10) do
+    value40.FillColor = p49
+    value40.OutlineColor = p49
+end
+end)
+
+makeTextButton6(scroll10, "Self Highlight", false, function(p50)
+    v1.SelfHighlightEnabled = p50
+    makeHighlight()
+
+    if p50 then
+        makeTextLabel("Self Highlight", "Your character highlighted.", 3)
+    end
+end, nil, nil, v1.SelfHighlightColor, function(p51)
+v1.SelfHighlightColor = p51
+
+if highlight then
+    highlight.FillColor = p51
+end
+end)
+
+makeFrame(scroll10)
+makeTextLabel3(scroll10, "World ESP")
+
+makeTextButton6(scroll10, "Homeless Man ESP", false, function(p52)
+    if not _G.HMP then
+        _G.HMP = {}
+    end
+
+local v170 = {
+{ Name = "Homeless man 1", P = Vector3.new(1102.3, 6, 529.7) }, { Name = "Homeless man 2", P = Vector3.new(876.8, 6.4, -62.8) }, { Name = "Homeless man 3", P = Vector3.new(899.3, 3.8, -283) }, { Name = "Homeless man 4", P = Vector3.new(699.7, 4.1, -427.6) }, { Name = "Homeless man 5", P = Vector3.new(54.1, 4, -427.3) }, { Name = "Homeless man 6", P = Vector3.new(-313.8, 3.9, -359) }, { Name = "Homeless man 7", P = Vector3.new(-523.4, 7.9, -163.8) }, { Name = "Homeless man 8", P = Vector3.new(-273.8, 3.9, -212.3) }, { Name = "Homeless man 9", P = Vector3.new(64.9, 4.3, 67.2) }, { Name = "Homeless man 10", P = Vector3.new(24.1, 3.7, 221) }, { Name = "Homeless man 11", P = Vector3.new(153.1, 3.7, -209.8) }, }
+
+if p52 then
+    for index31, value41 in ipairs(v170) do
+        local part = Instance.new("Part")
+        part.Size = Vector3.new(1, 1, 1)
+        part.Position = value41.P
+        part.Anchored = true
+        part.CanCollide = false
+        part.Transparency = 1
+        part.Parent = workspace
+
+        local instance111 = Instance.new("BillboardGui", part)
+        instance111.Size = UDim2.new(0, 150, 0, 30)
+        instance111.StudsOffset = Vector3.new(0, 2, 0)
+        instance111.AlwaysOnTop = true
+
+        local instance112 = Instance.new("TextLabel", instance111)
+        instance112.Size = UDim2.new(1, 0, 1, 0)
+        instance112.BackgroundTransparency = 1
+        instance112.Text = value41.Name
+        instance112.TextColor3 = Color3.new(1, 1, 1)
+        instance112.TextStrokeTransparency = 1
+        instance112.Font = Enum.Font.Gotham
+        instance112.TextSize = 13
+
+        table.insert(_G.HMP, part)
+    end
+else
+    for index32, value42 in ipairs(_G.HMP) do
+        value42:Destroy()
+    end
+
+_G.HMP = {}
+end
+end)
+
+makeTextButton6(scroll10, "ATMs ESP", false, function(p53)
+    if not _G.ATMP then
+        _G.ATMP = {}
+    end
+
+local v171 = {
+{ Name = "ATM 1", P = Vector3.new(-33.3, 3.7, -300.3) }, { Name = "ATM 2", P = Vector3.new(-266.2, 3.9, -212) }, { Name = "ATM 3", P = Vector3.new(-536.5, 3.7, -20.5) }, { Name = "ATM 4", P = Vector3.new(-651.7, 3.7, 154.9) }, { Name = "ATM 5", P = Vector3.new(-454.9, 3.7, 371) }, { Name = "ATM 6", P = Vector3.new(-314.8, 3.7, 145.7) }, { Name = "ATM 7", P = Vector3.new(-11, 3.7, 234.2) }, { Name = "ATM 8", P = Vector3.new(497.4, 3.8, 405.5) }, { Name = "ATM 9", P = Vector3.new(1054.3, 3.7, 589.4) }, { Name = "ATM 10", P = Vector3.new(1096.9, 3.4, 178.7) }, { Name = "ATM 11", P = Vector3.new(875, 3.4, -346.2) }, { Name = "ATM 12", P = Vector3.new(700.7, 3.7, -240.4) }, { Name = "ATM 13", P = Vector3.new(538.4, 3.7, -349.2) }, { Name = "ATM 14", P = Vector3.new(359.8, 3.7, -359.2) }, { Name = "ATM 15", P = Vector3.new(236.1, 3.7, -163.2) }, { Name = "ATM 16", P = Vector3.new(716.7, 3.8, 413.9) }, }
+
+if p53 then
+    for index33, value43 in ipairs(v171) do
+        local part2 = Instance.new("Part")
+        part2.Size = Vector3.new(1, 1, 1)
+        part2.Position = value43.P
+        part2.Anchored = true
+        part2.CanCollide = false
+        part2.Transparency = 1
+        part2.Parent = workspace
+
+        local instance113 = Instance.new("BillboardGui", part2)
+        instance113.Size = UDim2.new(0, 150, 0, 30)
+        instance113.StudsOffset = Vector3.new(0, 2, 0)
+        instance113.AlwaysOnTop = true
+
+        local instance114 = Instance.new("TextLabel", instance113)
+        instance114.Size = UDim2.new(1, 0, 1, 0)
+        instance114.BackgroundTransparency = 1
+        instance114.Text = value43.Name
+        instance114.TextColor3 = Color3.fromRGB(0, 255, 100)
+        instance114.TextStrokeTransparency = 1
+        instance114.Font = Enum.Font.Gotham
+        instance114.TextSize = 13
+
+        table.insert(_G.ATMP, part2)
+    end
+else
+    for index34, value44 in ipairs(_G.ATMP) do
+        value44:Destroy()
+    end
+
+_G.ATMP = {}
+end
+end)
+
+do
+    makeTextButton6(scroll10, "Robbery Stores ESP", false, function(p54)
+        if not _G.STP then
+            _G.STP = {}
+        end
+
+    local v172 = {
+    { Name = "The Deli", P = Vector3.new(-661, 4, 159.2) }, { Name = "Unc's Deli", P = Vector3.new(-363.5, 3.6, -325.8) }, { Name = "Food corp", P = Vector3.new(365.7, 3.5, -349.4) }, { Name = "Seafood store", P = Vector3.new(904.1, 3.5, -87.2) }, { Name = "Gas station", P = Vector3.new(531, 3.5, 429.7) }, { Name = "Jim's market", P = Vector3.new(-63.8, 4.5, -86.6) }, }
+
+    if p54 then
+        for index35, value45 in ipairs(v172) do
+            local part3 = Instance.new("Part")
+            part3.Size = Vector3.new(1, 1, 1)
+            part3.Position = value45.P
+            part3.Anchored = true
+            part3.CanCollide = false
+            part3.Transparency = 1
+            part3.Parent = workspace
+
+            local instance115 = Instance.new("BillboardGui", part3)
+            instance115.Size = UDim2.new(0, 160, 0, 30)
+            instance115.StudsOffset = Vector3.new(0, 2, 0)
+            instance115.AlwaysOnTop = true
+
+            local instance116 = Instance.new("TextLabel", instance115)
+            instance116.Size = UDim2.new(1, 0, 1, 0)
+            instance116.BackgroundTransparency = 1
+            instance116.Text = value45.Name
+            instance116.TextColor3 = Color3.fromRGB(255, 80, 80)
+            instance116.TextStrokeTransparency = 1
+            instance116.Font = Enum.Font.Gotham
+            instance116.TextSize = 13
+
+            table.insert(_G.STP, part3)
+        end
+else
+    for index36, value46 in ipairs(_G.STP) do
+        value46:Destroy()
+    end
+
+_G.STP = {}
+end
+end)
+
+makeFrame(scroll10)
+makeTextLabel3(scroll10, "Lighting Customization")
+local v173 = { Ambient = lighting.Ambient, OutdoorAmbient = lighting.OutdoorAmbient }
+
+makeTextButton6(scroll10, "Custom Ambient", false, function(p55)
+    if p55 then
+        lighting.Ambient = v1.CustomAmbientColor or Color3.fromRGB(255, 255, 255)
+        lighting.OutdoorAmbient = v1.CustomAmbientColor or Color3.fromRGB(255, 255, 255)
+    else
+        lighting.Ambient = v173.Ambient
+        lighting.OutdoorAmbient = v173.OutdoorAmbient
+    end
+end, nil, nil, Color3.fromRGB(255, 255, 255), function(p56)
+v1.CustomAmbientColor = p56
+lighting.Ambient = p56
+lighting.OutdoorAmbient = p56
+end)
+
+makeTextButton(
+scroll10, "Time of Day (Hour): ", 0, 23, math.floor(lighting.ClockTime), function(clockTime) lighting.ClockTime = clockTime end
+)
+
+makeTextButton(
+scroll10, "Map Brightness: ", 0, 10, math.floor(lighting.Brightness), function(brightness) lighting.Brightness = brightness end
+)
+
+makeTextButton6(scroll10, "Global Shadows", lighting.GlobalShadows, function(globalShadows2)
+    lighting.GlobalShadows = globalShadows2
+end)
+
+local blurEffect = lighting:FindFirstChildOfClass("BlurEffect")
+or Instance.new("BlurEffect", lighting)
+
+local bloomEffect = lighting:FindFirstChildOfClass("BloomEffect")
+or Instance.new("BloomEffect", lighting)
+
+makeTextButton(scroll10, "Blur Intensity: ", 0, 24, 0, function(size)
+    blurEffect.Size = size
+end)
+
+makeTextButton(scroll10, "Bloom Intensity: ", 0, 10, 2, function(p57)
+    bloomEffect.Intensity = p57 / 2
+end)
+end
+
+makeTextButton7(scroll10, "Skybox Theme", { "Default", "Purple Nebula", "Dark City", "Vaporwave" }, "Default", function(p58)
+    local sky = lighting:FindFirstChildOfClass("Sky")
+
+    if sky then
+        sky:Destroy()
+    end
+
+if p58 ~= "Default" then
+    local instance117 = Instance.new("Sky", lighting)
+
+    if p58 == "Purple Nebula" then
+        instance117.SkyboxBk = "rbxassetid://600830446"
+        instance117.SkyboxDn = "rbxassetid://600831635"
+        instance117.SkyboxFt = "rbxassetid://600830722"
+        instance117.SkyboxLf = "rbxassetid://600830953"
+        instance117.SkyboxRt = "rbxassetid://600831157"
+        instance117.SkyboxUp = "rbxassetid://600831412"
+    elseif p58 == "Dark City" then
+        instance117.SkyboxBk = "rbxassetid://1014350111"
+        instance117.SkyboxDn = "rbxassetid://1014350106"
+        instance117.SkyboxFt = "rbxassetid://1014350125"
+        instance117.SkyboxLf = "rbxassetid://1014350141"
+        instance117.SkyboxRt = "rbxassetid://1014350186"
+        instance117.SkyboxUp = "rbxassetid://1014350200"
+    elseif p58 == "Vaporwave" then
+        instance117.SkyboxBk = "rbxassetid://2810237722"
+        instance117.SkyboxDn = "rbxassetid://2810238125"
+        instance117.SkyboxFt = "rbxassetid://2810232491"
+        instance117.SkyboxLf = "rbxassetid://2810235315"
+        instance117.SkyboxRt = "rbxassetid://2810236052"
+        instance117.SkyboxUp = "rbxassetid://2810234127"
+    end
+end
+end)
+
+scroll11 = makeTextButton8("PLAYER").scroll
+makeTextLabel3(scroll11, "Movement")
+
+makeTextButton6(scroll11, "Speed Boost", false, function(p59)
+    v1.SpeedhackEnabled = p59
+    local character13 = localPlayer.Character
+    local humanoid9 = character13 and character13:FindFirstChildOfClass("Humanoid")
+
+    if humanoid9 then
+        humanoid9.WalkSpeed = p59 and 23 or 16
+    end
+
+if p59 then
+    makeTextLabel("Speed Boost", "WalkSpeed set to 23", 3)
+end
+end)
+
+makeTextButton6(scroll11, "Enable Jump", false, function(p60)
+    v1.JumpEnabled = p60
+    local character14 = localPlayer.Character
+    local humanoid10 = character14 and character14:FindFirstChildOfClass("Humanoid")
+
+    if humanoid10 then
+        if p60 then
+            humanoid10.JumpPower = 50
+            humanoid10.JumpHeight = 7.2
+            humanoid10.UseJumpPower = true
+            humanoid10:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+        else
+            humanoid10.JumpPower = 0
+            humanoid10.JumpHeight = 0
+            humanoid10:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+        end
+end
+end)
+
+localPlayer.CharacterAdded:Connect(function(character15)
+    local waitForChild = character15:WaitForChild("Humanoid", 5)
+
+    if waitForChild then
+        if v1.SpeedhackEnabled then
+            waitForChild.WalkSpeed = 23
+        end
+
+    if v1.JumpEnabled then
+        waitForChild.JumpPower = 50
+        waitForChild.JumpHeight = 7.2
+        waitForChild.UseJumpPower = true
+        waitForChild:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+    else
+        waitForChild.JumpPower = 0
+        waitForChild.JumpHeight = 0
+        waitForChild:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+    end
+end
+end)
+
+makeTextButton6(scroll11, "Delete Mode (Alt+Click)", false, function(p61)
+    v1.DeleteActive = p61
+
+    if touchEnabled and instance11 then
+        instance11.Visible = p61
+
+        if instance12 then
+            instance12.Visible = p61
+        end
+end
+
+if p61 then
+    makeTextLabel("Delete Mode", "Alt+Click deletes parts. Ctrl+Z to undo.", 4)
+end
+end)
+
+makeFrame(scroll11)
+makeTextLabel3(scroll11, "Interact")
+
+makeTextButton6(scroll11, "Instant Interact", false, function(p62)
+    v1.InstantInteractEnabled = p62
+
+    if p62 then
+        f20()
+        makeTextLabel("Instant Interact", "All prompts now trigger instantly.", 3)
+    else
+        f21()
+    end
+end)
+
+makeTextLabel2(
+scroll11, "Makes all ProximityPrompts trigger on a single press — no hold required."
+)
+
+makeFrame(scroll11)
+
+do
+    makeTextLabel3(scroll11, "Marshmallow Autofarm")
+
+    makeTextButton6(scroll11, "Marsh Autofarm", false, function(p63)
+        v1.MarshFarmActive = p63
+
+        if p63 then
+            makeTextLabel("Autofarm", "Marshmallow farm started.", 3)
+        else
+            makeTextLabel("Autofarm", "Stopped.", 2)
+        end
+end)
+
+makeTextLabel2(
+scroll11, "Requires: Water, Sugar Block Bag, Gelatin, Empty Bag in backpack. Uses VIM or fireproximityprompt."
+)
+
+makeFrame(scroll11)
+makeTextLabel3(scroll11, "Stretch Res")
+
+makeTextButton6(scroll11, "Stretch Res", false, function(p64)
+    v1.StretchEnabled = p64
+    f3(p64)
+
+    if p64 then
+        makeTextLabel("Stretch Res", "Scale " .. v1.StretchScale .. "%", 3)
+    end
+end)
+
+makeTextButton(scroll11, "Stretch Amount: ", 0, 100, 70, function(stretchScale)
+    v1.StretchScale = stretchScale
+
+    if v1.StretchEnabled then
+        f3(true)
+    end
+end)
+
+makeFrame(scroll11)
+makeTextLabel3(scroll11, "Clothing Changer")
+local shirtTemplate = nil
+local pantsTemplate = nil
+
+local function f57()
+    local character16 = localPlayer.Character
+
+    if not character16 then
+        return
+    else
+        local shirt = character16:FindFirstChildOfClass("Shirt")
+        local pants = character16:FindFirstChildOfClass("Pants")
+
+        if shirt and not shirtTemplate then
+            shirtTemplate = shirt.ShirtTemplate
+        end
+
+    if pants and not pantsTemplate then
+        pantsTemplate = pants.PantsTemplate
+    end
+
+return
+end
+end
+
+local function makePants()
+    local character17 = localPlayer.Character
+
+    if not character17 then
+        return
+    else
+        local pants2 = character17:FindFirstChildOfClass("Pants")
+
+        if pantsTemplate then
+            if pants2 then
+                pants2.PantsTemplate = pantsTemplate
+            else
+                Instance.new("Pants", character17).PantsTemplate = pantsTemplate
+            end
+
+        pantsTemplate = nil
+    elseif pants2 then
+        pants2:Destroy()
+    end
+
+return
+end
+end
+
+local function makePants2(p65)
+    local character18 = localPlayer.Character
+
+    if not character18 then
+        return false
+    else
+        f57()
+        local pants3 = character18:FindFirstChildOfClass("Pants")
+
+        if pants3 then
+            pants3:Destroy()
+        end
+
+    task.wait()
+
+    Instance.new("Pants", character18).PantsTemplate = "http://www.roblox.com/asset/?id=" .. p65
+
+    return true
+end
+end
+
+local function makeShirt(p66)
+    local character19 = localPlayer.Character
+
+    if not character19 then
+        return false
+    else
+        f57()
+        local shirt2 = character19:FindFirstChildOfClass("Shirt")
+
+        if shirt2 then
+            shirt2:Destroy()
+        end
+
+    task.wait()
+
+    Instance.new("Shirt", character19).ShirtTemplate = "http://www.roblox.com/asset/?id=" .. p66
+
+    return true
+end
+end
+
+local function makeShirt2()
+    local character20 = localPlayer.Character
+
+    if not character20 then
+        return
+    else
+        local shirt3 = character20:FindFirstChildOfClass("Shirt")
+
+        if shirtTemplate then
+            if shirt3 then
+                shirt3.ShirtTemplate = shirtTemplate
+            else
+                Instance.new("Shirt", character20).ShirtTemplate = shirtTemplate
+            end
+
+        shirtTemplate = nil
+    elseif shirt3 then
+        shirt3:Destroy()
+    end
+
+return
+end
+end
+
+local function makeTextButton9(scroll12, text11, placeholderText, fn, fn2)
+    count2 = count2 + 1
+
+    local instance118 = Instance.new("Frame", scroll12)
+    instance118.Size = UDim2.new(1, 0, 0, v85 + 10 + 4)
+    instance118.BackgroundColor3 = v86.ROW_BG
+    instance118.BorderSizePixel = 0
+    instance118.LayoutOrder = count2
+    instance118.ZIndex = 7
+
+    local instance119 = Instance.new("TextLabel", instance118)
+    instance119.Size = UDim2.new(1, -32, 0, 16)
+    instance119.Position = UDim2.new(0, 16, 0, 5)
+    instance119.BackgroundTransparency = 1
+    instance119.Text = text11
+    instance119.TextColor3 = v86.SUBTEXT
+    instance119.Font = Enum.Font.Gotham
+    instance119.TextSize = 10
+    instance119.TextXAlignment = Enum.TextXAlignment.Left
+    instance119.ZIndex = 8
+
+    local v174 = v80 and 52 or 46
+    local v175 = v80 and 42 or 36
+
+    local instance120 = Instance.new("Frame", instance118)
+    instance120.Size = UDim2.new(1, -(32 + v174 + v175 + 12), 0, v80 and 26 or 22)
+    instance120.Position = UDim2.new(0, 16, 0, 22)
+    instance120.BackgroundColor3 = v86.BIND_BG
+    instance120.BorderSizePixel = 0
+    instance120.ZIndex = 8
+
+    Instance.new("UICorner", instance120).CornerRadius = UDim.new(0, 5)
+
+    local instance121 = Instance.new("UIStroke", instance120)
+    instance121.Color = v86.SEP
+    instance121.Thickness = 1
+    instance121.Transparency = 0.4
+
+    local v176 = ""
+
+    local instance122 = Instance.new("TextBox", instance120)
+    instance122.Size = UDim2.new(1, -10, 1, 0)
+    instance122.Position = UDim2.new(0, 8, 0, 0)
+    instance122.BackgroundTransparency = 1
+    instance122.PlaceholderText = placeholderText
+    instance122.PlaceholderColor3 = v86.SUBTEXT
+    instance122.Text = ""
+    instance122.TextColor3 = v86.TEXT
+    instance122.Font = Enum.Font.Gotham
+    instance122.TextSize = 12
+    instance122.ClearTextOnFocus = false
+    instance122.TextXAlignment = Enum.TextXAlignment.Left
+    instance122.ZIndex = 15
+
+    instance122.Changed:Connect(function(p67)
+        if p67 == "Text" then
+            local gsub = instance122.Text:gsub("%D", "")
+
+            if #gsub > 12 then
+                gsub = gsub:sub(1, 12)
+            end
+
+        if gsub ~= instance122.Text then
+            instance122.Text = gsub
+        end
+
+    v176 = gsub
+end
+end)
+
+instance122.Focused:Connect(function()
+    instance121.Color = v86.SLIDER_FILL
+    instance121.Transparency = 0.1
+end)
+
+instance122.FocusLost:Connect(function()
+    local gsub2 = instance122.Text:gsub("%D", "")
+    instance122.Text = gsub2
+    v176 = gsub2
+
+    instance121.Color = v86.SEP
+    instance121.Transparency = 0.4
+end)
+
+local instance123 = Instance.new("TextButton", instance118)
+instance123.Size = UDim2.new(0, v174, 0, v80 and 26 or 22)
+instance123.Position = UDim2.new(1, -(v174 + v175 + 8 + 16), 0, 22)
+instance123.BackgroundColor3 = Color3.fromRGB(35, 100, 55)
+instance123.Text = "Apply"
+instance123.TextColor3 = Color3.new(1, 1, 1)
+instance123.Font = Enum.Font.GothamBold
+instance123.TextSize = 10
+instance123.BorderSizePixel = 0
+instance123.ZIndex = 15
+
+Instance.new("UICorner", instance123).CornerRadius = UDim.new(0, 5)
+
+local function f58()
+    local d = v176:match("%d+")
+
+    if not d or d == "" then
+        makeTextLabel("Error", "Enter a valid asset ID first.", 3)
+        return
+    end
+
+if fn(d) then
+    makeTextLabel("Applied ✓", "Asset ID " .. d .. " applied.", 3)
+else
+    makeTextLabel("Failed", "Could not apply ID " .. d .. ".", 3)
+end
+end
+
+instance123.MouseButton1Click:Connect(f58)
+
+instance123.InputBegan:Connect(function(input39)
+    if input39.UserInputType == Enum.UserInputType.Touch then
+        f58()
+    end
+end)
+
+local instance124 = Instance.new("TextButton", instance118)
+instance124.Size = UDim2.new(0, v175, 0, v80 and 26 or 22)
+instance124.Position = UDim2.new(1, -(v175 + 16), 0, 22)
+instance124.BackgroundColor3 = Color3.fromRGB(100, 35, 35)
+instance124.Text = "Clear"
+instance124.TextColor3 = Color3.new(1, 1, 1)
+instance124.Font = Enum.Font.GothamBold
+instance124.TextSize = 10
+instance124.BorderSizePixel = 0
+instance124.ZIndex = 15
+
+Instance.new("UICorner", instance124).CornerRadius = UDim.new(0, 5)
+
+local function f59()
+    v176 = ""
+    instance122.Text = ""
+    fn2()
+    makeTextLabel("Restored ✓", "Original restored.", 3)
+end
+
+instance124.MouseButton1Click:Connect(f59)
+
+instance124.InputBegan:Connect(function(input40)
+    if input40.UserInputType == Enum.UserInputType.Touch then
+        f59()
+    end
+end)
+end
+
+makeTextButton9(
+scroll11, "SHIRT ID", "Enter asset ID...", function(p68) return makeShirt(p68) end, function() makeShirt2() end
+)
+
+makeTextButton9(
+scroll11, "PANTS ID", "Enter asset ID...", function(p69) return makePants2(p69) end, function() makePants() end
+)
+
+localPlayer.CharacterAdded:Connect(function()
+    shirtTemplate = nil
+    pantsTemplate = nil
+end)
+end
+
+scroll13 = makeTextButton8("OTHER").scroll
+makeTextLabel3(scroll13, "Profile & Config")
+count2 = count2 + 1
+
+instance125 = Instance.new("Frame", scroll13)
+instance125.Size = UDim2.new(1, 0, 0, v80 and 60 or 68)
+instance125.BackgroundTransparency = 1
+instance125.LayoutOrder = count2
+instance125.ZIndex = 7
+
+instance126 = Instance.new("Frame", instance125)
+instance126.Size = UDim2.new(0.5, -20, 1, -8)
+instance126.Position = UDim2.new(0, 16, 0, 4)
+instance126.BackgroundColor3 = v86.CARD_BG
+
+do
+    instance126.BorderSizePixel = 0
+    instance126.ZIndex = 7
+
+    Instance.new("UICorner", instance126).CornerRadius = UDim.new(0, 8)
+    Instance.new("UIStroke", instance126).Color = v86.SEP
+
+    v177 = v80 and 32 or 40
+
+    local instance127 = Instance.new("Frame", instance126)
+    instance127.Size = UDim2.new(0, v177, 0, v177)
+    instance127.Position = UDim2.new(0, 8, 0.5, -v177 / 2)
+    instance127.BackgroundColor3 = v86.SEP
+    instance127.BorderSizePixel = 0
+    instance127.ZIndex = 8
+
+    Instance.new("UICorner", instance127).CornerRadius = UDim.new(1, 0)
+
+    local instance128 = Instance.new("ImageLabel", instance127)
+    instance128.Size = UDim2.new(1, 0, 1, 0)
+    instance128.BackgroundTransparency = 1
+
+    instance128.Image = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. localPlayer.UserId .. "&width=150&height=150&format=png"
+
+    instance128.ZIndex = 9
+
+    Instance.new("UICorner", instance128).CornerRadius = UDim.new(1, 0)
+end
+
+do
+    local instance129 = Instance.new("TextLabel", instance126)
+    instance129.Size = UDim2.new(1, -(v177 + 16), 0, 16)
+    instance129.Position = UDim2.new(0, v177 + 12, 0, v80 and 8 or 14)
+    instance129.BackgroundTransparency = 1
+    instance129.Text = localPlayer.Name
+    instance129.TextColor3 = v86.TEXT
+    instance129.Font = Enum.Font.GothamBold
+    instance129.TextSize = v80 and 11 or 12
+    instance129.TextXAlignment = Enum.TextXAlignment.Left
+    instance129.ZIndex = 9
+
+    local instance130 = Instance.new("TextLabel", instance126)
+    instance130.Size = UDim2.new(1, -(v177 + 16), 0, 12)
+    instance130.Position = UDim2.new(0, v177 + 12, 0, v80 and 26 or 32)
+    instance130.BackgroundTransparency = 1
+    instance130.Text = "@" .. localPlayer.Name
+    instance130.TextColor3 = v86.SUBTEXT
+    instance130.Font = Enum.Font.Gotham
+    instance130.TextSize = 9
+    instance130.TextXAlignment = Enum.TextXAlignment.Left
+    instance130.ZIndex = 9
+end
+
+do
+    instance131 = Instance.new("Frame", instance125)
+    instance131.Size = UDim2.new(0.5, -20, 1, -8)
+    instance131.Position = UDim2.new(0.5, 4, 0, 4)
+    instance131.BackgroundColor3 = v86.CARD_BG
+    instance131.BorderSizePixel = 0
+    instance131.ZIndex = 7
+
+    Instance.new("UICorner", instance131).CornerRadius = UDim.new(0, 8)
+    Instance.new("UIStroke", instance131).Color = v86.SEP
+
+    local instance132 = Instance.new("TextLabel", instance131)
+    instance132.Size = UDim2.new(1, 0, 0, 14)
+    instance132.Position = UDim2.new(0, 0, 0, 4)
+    instance132.BackgroundTransparency = 1
+    instance132.Text = "CONFIGS"
+    instance132.TextColor3 = v86.SUBTEXT
+    instance132.Font = Enum.Font.GothamBold
+    instance132.TextSize = 9
+    instance132.ZIndex = 8
+end
+
+v178 = v80 and 20 or 18
+
+instance133 = Instance.new("TextButton", instance131)
+instance133.Size = UDim2.new(0.46, -4, 0, v178)
+instance133.Position = UDim2.new(0, 6, 0, 18)
+instance133.BackgroundColor3 = Color3.fromRGB(35, 90, 50)
+instance133.BorderSizePixel = 0
+instance133.ZIndex = 9
+instance133.Text = "💾"
+instance133.TextColor3 = Color3.new(1, 1, 1)
+instance133.Font = Enum.Font.GothamBold
+instance133.TextSize = 12
+
+Instance.new("UICorner", instance133).CornerRadius = UDim.new(0, 4)
+
+do
+    instance134 = Instance.new("TextButton", instance131)
+    instance134.Size = UDim2.new(0.5, -4, 0, v178)
+    instance134.Position = UDim2.new(0.48, 2, 0, 18)
+    instance134.BackgroundColor3 = Color3.fromRGB(35, 55, 100)
+    instance134.BorderSizePixel = 0
+    instance134.ZIndex = 9
+    instance134.Text = "📂 Manage"
+    instance134.TextColor3 = Color3.new(1, 1, 1)
+    instance134.Font = Enum.Font.GothamBold
+    instance134.TextSize = 10
+
+    Instance.new("UICorner", instance134).CornerRadius = UDim.new(0, 4)
+
+    local instance135 = Instance.new("TextLabel", instance131)
+    instance135.Size = UDim2.new(1, -12, 0, 12)
+    instance135.Position = UDim2.new(0, 6, 0, 18 + v178 + 3)
+    instance135.BackgroundTransparency = 1
+    instance135.Text = "No config loaded"
+    instance135.TextColor3 = v86.SUBTEXT
+    instance135.Font = Enum.Font.Gotham
+    instance135.TextSize = 8
+    instance135.TextTruncate = Enum.TextTruncate.AtEnd
+    instance135.ZIndex = 9
+
+    local function f61(p70)
+        local v179 = p70
+        v179 = v179 or "default"
+
+        if pcall(function()
+            local v180 = f30()
+            v180[v179] = f27(f31())
+            f32(v180)
+        end) then
+    f60("✓ " .. v179, Color3.fromRGB(80, 200, 100))
+    makeTextLabel("Saved", "Slot: " .. v179, 3)
+else
+    pcall(function() setclipboard(f27(f31())) end)
+    f60("Clipboard!", Color3.fromRGB(200, 180, 60))
+    makeTextLabel("Config", "No file access — copied.", 3)
+end
+end
+
+function f60(text12, p71)
+    instance135.Text = text12
+    instance135.TextColor3 = p71 or v86.SUBTEXT
+end
+
+instance133.MouseButton1Click:Connect(function() f61("default") end)
+
+instance133.InputBegan:Connect(function(input41)
+    if input41.UserInputType == Enum.UserInputType.Touch then
+        f61("default")
+    end
+end)
+end
+
+do
+    instance136 = Instance.new("Frame", cloudWareV42)
+    instance136.Size = UDim2.new(0, math.min(360, v81 - 20), 0, 0)
+    instance136.AutomaticSize = Enum.AutomaticSize.Y
+    instance136.Position = UDim2.new(0.5, -math.min(180, (v81 - 20) / 2), 0.1, 0)
+    instance136.BackgroundColor3 = v86.CARD_BG
+    instance136.BorderSizePixel = 0
+    instance136.ZIndex = 60
+    instance136.Visible = false
+
+    Instance.new("UICorner", instance136).CornerRadius = UDim.new(0, 10)
+
+    local instance137 = Instance.new("UIStroke", instance136)
+    instance137.Color = v86.WHITE
+    instance137.Thickness = 1
+    instance137.Transparency = 0.6
+end
+
+do
+    local instance138 = Instance.new("UIPadding", instance136)
+    instance138.PaddingLeft = UDim.new(0, 14)
+    instance138.PaddingRight = UDim.new(0, 14)
+    instance138.PaddingTop = UDim.new(0, 12)
+    instance138.PaddingBottom = UDim.new(0, 14)
+
+    local instance139 = Instance.new("UIListLayout", instance136)
+    instance139.SortOrder = Enum.SortOrder.LayoutOrder
+    instance139.Padding = UDim.new(0, 8)
+
+    local instance140 = Instance.new("Frame", instance136)
+    instance140.Size = UDim2.new(1, 0, 0, 24)
+    instance140.BackgroundTransparency = 1
+    instance140.LayoutOrder = 1
+    instance140.ZIndex = 61
+
+    local instance141 = Instance.new("TextLabel", instance140)
+    instance141.Size = UDim2.new(1, -30, 1, 0)
+    instance141.BackgroundTransparency = 1
+    instance141.Text = "Config Manager"
+    instance141.TextColor3 = v86.WHITE
+    instance141.Font = Enum.Font.GothamBold
+    instance141.TextSize = 14
+    instance141.TextXAlignment = Enum.TextXAlignment.Left
+    instance141.ZIndex = 62
+
+    local instance142 = Instance.new("TextButton", instance140)
+    instance142.Size = UDim2.new(0, 22, 0, 22)
+    instance142.Position = UDim2.new(1, -22, 0, 1)
+    instance142.BackgroundColor3 = v86.OFF_BG
+    instance142.Text = "✕"
+    instance142.TextColor3 = v86.TEXT
+    instance142.Font = Enum.Font.GothamBold
+    instance142.TextSize = 11
+    instance142.BorderSizePixel = 0
+    instance142.ZIndex = 62
+
+    Instance.new("UICorner", instance142).CornerRadius = UDim.new(0, 4)
+
+    instance142.MouseButton1Click:Connect(function() instance136.Visible = false end)
+
+    instance142.InputBegan:Connect(function(input42)
+        if input42.UserInputType == Enum.UserInputType.Touch then
+            instance136.Visible = false
+        end
+end)
+end
+
+do
+    instance143 = Instance.new("Frame", instance136)
+    instance143.Size = UDim2.new(1, 0, 0, v80 and 28 or 24)
+    instance143.BackgroundTransparency = 1
+    instance143.LayoutOrder = 2
+    instance143.ZIndex = 61
+
+    local instance144 = Instance.new("UIListLayout", instance143)
+    instance144.FillDirection = Enum.FillDirection.Horizontal
+    instance144.SortOrder = Enum.SortOrder.LayoutOrder
+    instance144.Padding = UDim.new(0, 6)
+
+    local instance145 = Instance.new("Frame", instance143)
+    instance145.Size = UDim2.new(1, -80, 1, 0)
+    instance145.BackgroundColor3 = v86.BIND_BG
+    instance145.BorderSizePixel = 0
+    instance145.ZIndex = 62
+    instance145.LayoutOrder = 1
+
+    Instance.new("UICorner", instance145).CornerRadius = UDim.new(0, 5)
+    instance146 = Instance.new("TextBox", instance145)
+end
+
+instance146.Size = UDim2.new(1, -10, 1, 0)
+instance146.Position = UDim2.new(0, 6, 0, 0)
+instance146.BackgroundTransparency = 1
+instance146.PlaceholderText = "Config name..."
+instance146.PlaceholderColor3 = v86.SUBTEXT
+instance146.Text = ""
+instance146.TextColor3 = v86.TEXT
+instance146.Font = Enum.Font.Gotham
+instance146.TextSize = 12
+instance146.ClearTextOnFocus = false
+instance146.ZIndex = 63
+
+instance147 = Instance.new("TextButton", instance143)
+
+do
+    instance147.Size = UDim2.new(0, 74, 1, 0)
+    instance147.BackgroundColor3 = Color3.fromRGB(35, 90, 50)
+    instance147.Text = "💾 Save"
+    instance147.TextColor3 = Color3.new(1, 1, 1)
+    instance147.Font = Enum.Font.GothamBold
+    instance147.TextSize = 11
+    instance147.BorderSizePixel = 0
+    instance147.ZIndex = 62
+    instance147.LayoutOrder = 2
+
+    Instance.new("UICorner", instance147).CornerRadius = UDim.new(0, 5)
+
+    local instance148 = Instance.new("Frame", instance136)
+    instance148.Size = UDim2.new(1, 0, 0, 0)
+    instance148.AutomaticSize = Enum.AutomaticSize.Y
+    instance148.BackgroundTransparency = 1
+    instance148.LayoutOrder = 3
+    instance148.ZIndex = 61
+
+    local instance149 = Instance.new("UIListLayout", instance148)
+    instance149.SortOrder = Enum.SortOrder.LayoutOrder
+    instance149.Padding = UDim.new(0, 4)
+
+    local instance150 = Instance.new("TextLabel", instance148)
+    instance150.Size = UDim2.new(1, 0, 0, 30)
+    instance150.BackgroundTransparency = 1
+    instance150.Text = "No saved configs yet."
+    instance150.TextColor3 = v86.SUBTEXT
+    instance150.Font = Enum.Font.Gotham
+    instance150.TextSize = 12
+    instance150.LayoutOrder = 1
+    instance150.ZIndex = 62
+
+    local v181 = v80 and 34 or 30
+    local v182 = {}
+    local f62
+
+    local function f63()
+        local gsub3 = instance146.Text:gsub("^%s*(.-)%s*$", "%1")
+
+        if gsub3 == "" then
+            gsub3 = "config" .. tostring(math.random(100, 999))
+        end
+
+    local v183 = f30()
+    v183[gsub3] = f27(f31())
+
+    f32(v183)
+    f60("✓ " .. gsub3, Color3.fromRGB(80, 200, 100))
+    instance146.Text = ""
+    makeTextLabel("Saved", "Config '" .. gsub3 .. "' saved.", 3)
+    f62()
+end
+
+function f62()
+    for key24, value47 in pairs(v182) do
+    end
+
+v182 = {}
+local v184 = 2
+local v185 = false
+
+for key25, value48 in pairs((f30())) do
+    v185 = true
+
+    local instance151 = Instance.new("Frame", instance148)
+    instance151.Size = UDim2.new(1, 0, 0, v181)
+    instance151.BackgroundColor3 = v86.DROPDOWN_BG
+    instance151.BorderSizePixel = 0
+    instance151.LayoutOrder = v184
+    instance151.ZIndex = 62
+
+    Instance.new("UICorner", instance151).CornerRadius = UDim.new(0, 5)
+
+    local instance152 = Instance.new("TextLabel", instance151)
+    instance152.Size = UDim2.new(1, -130, 1, 0)
+    instance152.Position = UDim2.new(0, 10, 0, 0)
+    instance152.BackgroundTransparency = 1
+    instance152.Text = key25
+    instance152.TextColor3 = v86.TEXT
+    instance152.Font = Enum.Font.GothamBold
+    instance152.TextSize = 12
+    instance152.TextXAlignment = Enum.TextXAlignment.Left
+    instance152.ZIndex = 63
+
+    local instance153 = Instance.new("TextButton", instance151)
+    instance153.Size = UDim2.new(0, 52, 0, v181 - 8)
+    instance153.Position = UDim2.new(1, -120, 0.5, -(v181 - 8) / 2)
+    instance153.BackgroundColor3 = Color3.fromRGB(35, 55, 100)
+    instance153.Text = "Load"
+    instance153.TextColor3 = Color3.new(1, 1, 1)
+    instance153.Font = Enum.Font.GothamBold
+    instance153.TextSize = 11
+    instance153.BorderSizePixel = 0
+    instance153.ZIndex = 63
+
+    Instance.new("UICorner", instance153).CornerRadius = UDim.new(0, 4)
+
+    local instance154 = Instance.new("TextButton", instance151)
+    instance154.Size = UDim2.new(0, 24, 0, v181 - 8)
+    instance154.Position = UDim2.new(1, -62, 0.5, -(v181 - 8) / 2)
+    instance154.BackgroundColor3 = Color3.fromRGB(70, 60, 20)
+    instance154.Text = "↑"
+    instance154.TextColor3 = Color3.new(1, 1, 1)
+    instance154.Font = Enum.Font.GothamBold
+    instance154.TextSize = 13
+    instance154.BorderSizePixel = 0
+    instance154.ZIndex = 63
+
+    Instance.new("UICorner", instance154).CornerRadius = UDim.new(0, 4)
+
+    local instance155 = Instance.new("TextButton", instance151)
+    instance155.Size = UDim2.new(0, 24, 0, v181 - 8)
+    instance155.Position = UDim2.new(1, -32, 0.5, -(v181 - 8) / 2)
+    instance155.BackgroundColor3 = Color3.fromRGB(100, 30, 30)
+    instance155.Text = "✕"
+    instance155.TextColor3 = Color3.new(1, 1, 1)
+    instance155.Font = Enum.Font.GothamBold
+    instance155.TextSize = 13
+    instance155.BorderSizePixel = 0
+    instance155.ZIndex = 63
+
+    Instance.new("UICorner", instance155).CornerRadius = UDim.new(0, 4)
+    local v186 = key25
+    local v187 = value48
+
+    local function f64()
+        f25((f29(v187)))
+        f60("✓ " .. v186, Color3.fromRGB(80, 200, 100))
+        makeTextLabel("Loaded", "Slot: " .. v186 .. " — re-enable toggles.", 4)
+        instance136.Visible = false
+    end
+
+local function f65()
+    local v188 = f30()
+    v188[v186] = f27(f31())
+
+    f32(v188)
+    makeTextLabel("Overwritten", v186 .. " updated.", 3)
+    f62()
+end
+
+local function f66()
+    local v189 = f30()
+    v189[v186] = nil
+
+    f32(v189)
+    makeTextLabel("Deleted", "'" .. v186 .. "' removed.", 3)
+    f62()
+end
+
+instance153.MouseButton1Click:Connect(f64)
+
+instance153.InputBegan:Connect(function(input43)
+    if input43.UserInputType == Enum.UserInputType.Touch then
+        f64()
+    end
+end)
+
+instance154.MouseButton1Click:Connect(f65)
+
+instance154.InputBegan:Connect(function(input44)
+    if input44.UserInputType == Enum.UserInputType.Touch then
+        f65()
+    end
+end)
+
+instance155.MouseButton1Click:Connect(f66)
+
+instance155.InputBegan:Connect(function(input45)
+    if input45.UserInputType == Enum.UserInputType.Touch then
+        f66()
+    end
+end)
+
+table.insert(v182, instance151)
+v184 = v184 + 1
+end
+
+instance150.Visible = not v185
+end
+
+instance147.MouseButton1Click:Connect(f63)
+
+instance147.InputBegan:Connect(function(input46)
+    if input46.UserInputType == Enum.UserInputType.Touch then
+        f63()
+    end
+end)
+
+instance134.MouseButton1Click:Connect(function()
+    instance136.Visible = not instance136.Visible
+
+    if instance136.Visible then
+        f62()
+    end
+end)
+
+instance134.InputBegan:Connect(function(input47)
+    if input47.UserInputType == Enum.UserInputType.Touch then
+        instance136.Visible = not instance136.Visible
+
+        if instance136.Visible then
+            f62()
+        end
+end
+end)
+end
+
+do
+    makeFrame(scroll13)
+    makeTextLabel3(scroll13, "Credits (discord.gg/CbaeExmvWH)")
+    count2 = count2 + 1
+
+    local instance156 = Instance.new("Frame", scroll13)
+    instance156.Size = UDim2.new(1, 0, 0, v80 and 46 or 50)
+    instance156.BackgroundTransparency = 1
+    instance156.LayoutOrder = count2
+    instance156.ZIndex = 7
+
+    instance157 = Instance.new("Frame", instance156)
+    instance157.Size = UDim2.new(1, -32, 1, -8)
+    instance157.Position = UDim2.new(0, 16, 0, 4)
+    instance157.BackgroundColor3 = v86.CREDIT_BG
+end
+
+do
+    instance157.BorderSizePixel = 0
+    instance157.ZIndex = 7
+
+    Instance.new("UICorner", instance157).CornerRadius = UDim.new(0, 8)
+    Instance.new("UIStroke", instance157).Color = Color3.fromRGB(60, 60, 80)
+
+    local instance158 = Instance.new("TextLabel", instance157)
+    instance158.Size = UDim2.new(0, 22, 1, -8)
+    instance158.Position = UDim2.new(0, 10, 0, 4)
+    instance158.BackgroundTransparency = 1
+    instance158.Text = "👑"
+    instance158.TextScaled = true
+    instance158.Font = Enum.Font.Gotham
+    instance158.ZIndex = 9
+end
+
+do
+    local instance159 = Instance.new("TextLabel", instance157)
+    instance159.Size = UDim2.new(0, 130, 1, -8)
+    instance159.Position = UDim2.new(0, 38, 0, 4)
+    instance159.BackgroundTransparency = 1
+    instance159.Text = "first_dreamer"
+    instance159.TextColor3 = v86.TEXT
+    instance159.Font = Enum.Font.GothamBold
+    instance159.TextSize = 13
+    instance159.TextXAlignment = Enum.TextXAlignment.Left
+    instance159.ZIndex = 9
+
+    local instance160 = Instance.new("TextLabel", instance157)
+    instance160.Size = UDim2.new(1, -172, 1, -8)
+    instance160.Position = UDim2.new(0, 170, 0, 4)
+    instance160.BackgroundTransparency = 1
+    instance160.Text = "— Coder, Owner"
+    instance160.TextColor3 = v86.SUBTEXT
+    instance160.Font = Enum.Font.Gotham
+    instance160.TextSize = 11
+    instance160.TextXAlignment = Enum.TextXAlignment.Left
+    instance160.ZIndex = 9
+end
+
+do
+    count2 = count2 + 1
+
+    local instance161 = Instance.new("Frame", scroll13)
+    instance161.Size = UDim2.new(1, 0, 0, v80 and 46 or 50)
+    instance161.BackgroundTransparency = 1
+    instance161.LayoutOrder = count2
+    instance161.ZIndex = 7
+
+    instance162 = Instance.new("Frame", instance161)
+    instance162.Size = UDim2.new(1, -32, 1, -8)
+    instance162.Position = UDim2.new(0, 16, 0, 4)
+    instance162.BackgroundColor3 = v86.CREDIT_BG
+    instance162.BorderSizePixel = 0
+    instance162.ZIndex = 7
+end
+
+do
+    Instance.new("UICorner", instance162).CornerRadius = UDim.new(0, 8)
+    Instance.new("UIStroke", instance162).Color = Color3.fromRGB(60, 60, 80)
+
+    local instance163 = Instance.new("TextLabel", instance162)
+    instance163.Size = UDim2.new(0, 22, 1, -8)
+    instance163.Position = UDim2.new(0, 10, 0, 4)
+    instance163.BackgroundTransparency = 1
+    instance163.Text = "🎨"
+    instance163.TextScaled = true
+    instance163.Font = Enum.Font.Gotham
+    instance163.ZIndex = 9
+
+    local instance164 = Instance.new("TextLabel", instance162)
+    instance164.Size = UDim2.new(0, 130, 1, -8)
+    instance164.Position = UDim2.new(0, 38, 0, 4)
+    instance164.BackgroundTransparency = 1
+    instance164.Text = "q44w_"
+    instance164.TextColor3 = v86.TEXT
+    instance164.Font = Enum.Font.GothamBold
+    instance164.TextSize = 13
+    instance164.TextXAlignment = Enum.TextXAlignment.Left
+    instance164.ZIndex = 9
+end
+
+do
+    local instance165 = Instance.new("TextLabel", instance162)
+    instance165.Size = UDim2.new(1, -172, 1, -8)
+    instance165.Position = UDim2.new(0, 170, 0, 4)
+    instance165.BackgroundTransparency = 1
+    instance165.Text = "— UI Designer"
+    instance165.TextColor3 = v86.SUBTEXT
+    instance165.Font = Enum.Font.Gotham
+    instance165.TextSize = 11
+    instance165.TextXAlignment = Enum.TextXAlignment.Left
+    instance165.ZIndex = 9
+
+    makeFrame(scroll13)
+    makeTextLabel3(scroll13, "Changelog")
+end
+
+do
+    count2 = count2 + 1
+
+    local instance166 = Instance.new("Frame", scroll13)
+    instance166.Size = UDim2.new(1, 0, 0, 0)
+    instance166.AutomaticSize = Enum.AutomaticSize.Y
+    instance166.BackgroundTransparency = 1
+    instance166.LayoutOrder = count2
+    instance166.ZIndex = 7
+
+    instance167 = Instance.new("Frame", instance166)
+    instance167.Size = UDim2.new(1, -32, 1, 0)
+    instance167.AutomaticSize = Enum.AutomaticSize.Y
+    instance167.Position = UDim2.new(0, 16, 0, 4)
+    instance167.BackgroundColor3 = v86.CREDIT_BG
+end
+
+do
+    instance167.BorderSizePixel = 0
+    instance167.ZIndex = 7
+
+    Instance.new("UICorner", instance167).CornerRadius = UDim.new(0, 8)
+    Instance.new("UIStroke", instance167).Color = Color3.fromRGB(60, 60, 80)
+
+    local instance168 = Instance.new("UIPadding", instance167)
+    instance168.PaddingLeft = UDim.new(0, 14)
+    instance168.PaddingRight = UDim.new(0, 14)
+    instance168.PaddingTop = UDim.new(0, 10)
+    instance168.PaddingBottom = UDim.new(0, 10)
+
+    local instance169 = Instance.new("UIListLayout", instance167)
+    instance169.SortOrder = Enum.SortOrder.LayoutOrder
+    instance169.Padding = UDim.new(0, 6)
+end
+
+do
+    local instance170 = Instance.new("TextLabel", instance167)
+    instance170.Size = UDim2.new(1, 0, 0, 16)
+    instance170.BackgroundTransparency = 1
+    instance170.Text = "v4.6  —  Latest"
+    instance170.TextColor3 = v86.WHITE
+    instance170.Font = Enum.Font.GothamBold
+    instance170.TextSize = 12
+    instance170.TextXAlignment = Enum.TextXAlignment.Left
+    instance170.LayoutOrder = 1
+    instance170.ZIndex = 9
+
+    for index37, value49 in ipairs({
+    "+ FIX: Hitbox CanCollide=false — no longer pushes players", "+ FIX: ESP, Highlights, Aimbot skip dead players", "+ Color pickers restored on Player/Tool/Self Highlight", "+ Instant Interact: all ProximityPrompts trigger on press", "+ Marshmallow Autofarm from v1 integrated (Player tab)", "+ ESP adaptive FPS cap: fewer draws when many players", "+ Tracers & Head Circle ESP added to Drawing system", "+ Enable Jump toggle added", "+ Config Manager added (save/load/overwrite/delete)", }) do
+        local instance171 = Instance.new("TextLabel", instance167)
+        instance171.Size = UDim2.new(1, 0, 0, 0)
+        instance171.AutomaticSize = Enum.AutomaticSize.Y
+        instance171.BackgroundTransparency = 1
+        instance171.Text = value49
+        instance171.TextColor3 = v86.SUBTEXT
+        instance171.Font = Enum.Font.Gotham
+        instance171.TextSize = 11
+        instance171.TextWrapped = true
+        instance171.TextXAlignment = Enum.TextXAlignment.Left
+        instance171.LayoutOrder = index37 + 1
+        instance171.ZIndex = 9
+    end
+
+makeFrame(scroll13)
+end
+
+do
+    makeTextLabel3(scroll13, "Links")
+
+    makeTextButton5(scroll13, "📋 Copy Discord", function()
+        setclipboard("https://dsc.gg/cloud-ware")
+        makeTextLabel("Copied!", "Discord link copied.", 3)
+    end)
+
+makeTextButton5(scroll13, "📺 Copy YouTube", function()
+    setclipboard("https://www.youtube.com/@CloudWare.Exploit")
+    makeTextLabel("Copied!", "YouTube link copied.", 3)
+end)
+
+makeFrame(scroll13)
+makeTextLabel3(scroll13, "Settings")
+
+makeTextButton6(scroll13, "Show Snow Particles", true, function(showSnowParticles)
+    v1.ShowSnowParticles = showSnowParticles
+end)
+
+local instance172
+
+if not touchEnabled then
+    count2 = count2 + 1
+
+    local instance173 = Instance.new("Frame", scroll13)
+    instance173.Size = UDim2.new(1, 0, 0, v85)
+    instance173.BackgroundColor3 = v86.ROW_BG
+    instance173.BorderSizePixel = 0
+    instance173.LayoutOrder = count2
+    instance173.ZIndex = 7
+
+    local instance174 = Instance.new("Frame", instance173)
+    instance174.Size = UDim2.new(1, -32, 0, 1)
+    instance174.Position = UDim2.new(0, 16, 1, -1)
+    instance174.BackgroundColor3 = v86.SEP
+    instance174.BorderSizePixel = 0
+    instance174.ZIndex = 7
+
+    local instance175 = Instance.new("TextLabel", instance173)
+    instance175.Size = UDim2.new(1, -120, 1, 0)
+    instance175.Position = UDim2.new(0, 16, 0, 0)
+    instance175.BackgroundTransparency = 1
+    instance175.Text = "UI Toggle Key"
+    instance175.TextColor3 = v86.TEXT
+    instance175.Font = Enum.Font.Gotham
+    instance175.TextSize = textSize
+    instance175.TextXAlignment = Enum.TextXAlignment.Left
+    instance175.ZIndex = 8
+
+    local instance176 = Instance.new("Frame", instance173)
+    instance176.Size = UDim2.new(0, 52, 0, 20)
+    instance176.Position = UDim2.new(1, -64, 0.5, -10)
+    instance176.BackgroundColor3 = v86.BIND_BG
+    instance176.BorderSizePixel = 0
+    instance176.ZIndex = 11
+
+    Instance.new("UICorner", instance176).CornerRadius = UDim.new(0, 5)
+
+    instance172 = Instance.new("TextLabel", instance176)
+    instance172.Size = UDim2.new(1, 0, 1, 0)
+    instance172.BackgroundTransparency = 1
+    instance172.Text = "RCtrl"
+    instance172.TextColor3 = v86.BIND_TEXT
+    instance172.Font = Enum.Font.GothamBold
+    instance172.TextSize = 10
+    instance172.ZIndex = 12
+
+    local instance177 = Instance.new("TextButton", instance176)
+    instance177.Size = UDim2.new(1, 0, 1, 0)
+    instance177.BackgroundTransparency = 1
+    instance177.Text = ""
+    instance177.ZIndex = 20
+
+    instance177.MouseButton1Click:Connect(function()
+        local v190 = true
+
+        instance172.Text = "..."
+        instance172.TextColor3 = v86.SUBTEXT
+
+        local connect2
+
+        connect2 = userInputService.InputBegan:Connect(function(input48, p72)
+            if input48.UserInputType ~= Enum.UserInputType.Keyboard then
+                return
+            end
+
+        connect2:Disconnect()
+        v190 = false
+        rightControl = input48.KeyCode
+
+        instance172.Text = input48.KeyCode.Name:sub(1, 6)
+        instance172.TextColor3 = v86.BIND_TEXT
+    end)
+
+task.delay(8, function()
+    if v190 then
+        v190 = false
+        connect2:Disconnect()
+    end
+end)
+end)
+else
+    makeTextLabel2(scroll13, "📱 Tap ☁ button to toggle menu")
+end
+
+makeFrame(scroll13)
+makeTextLabel3(scroll13, "⚠ Danger Zone")
+makeTextLabel2(scroll13, "Panic disables ALL features and destroys the GUI.")
+
+makeTextButton5(
+scroll13, "🚨 PANIC — Disable Everything & Destroy GUI", function() f24() end, Color3.fromRGB(120, 25, 25)
+)
+end
+
+f56(combat2)
+
+makeTextLabel(
+"Lav beby BY Unknow v4.6", touchEnabled and "Loaded! Tap ☁ to toggle." or "Loaded! RightCtrl to toggle.", 4
+)
